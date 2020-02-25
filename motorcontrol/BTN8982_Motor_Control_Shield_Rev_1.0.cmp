@@ -1,0 +1,808 @@
+Cmp-Mod V01 Created by Cvpcb (2015-02-06 BZR 5410)-product   date = Mon 09 Feb 2015 04:12:04 PM PST
+
+BeginCmp
+TimeStamp = /5E54AFB3;
+Reference = (C7)24;
+ValeurCmp = CPOL-EUD;
+IdModule  = PANASONIC_D;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B07B;
+Reference = BTN8982_DEV.1;
+ValeurCmp = HW-INFINEON_BTN8962TA;
+IdModule  = HW-INFINEON_TO263-7-1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B143;
+Reference = BTN8982_DEV.2;
+ValeurCmp = HW-INFINEON_BTN8962TA;
+IdModule  = HW-INFINEON_TO263-7-1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B20B;
+Reference = C1;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B2D3;
+Reference = C2;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B39B;
+Reference = C3;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B463;
+Reference = C4;
+ValeurCmp = RCL_CPOL-EUE5-13;
+IdModule  = RCL_E5-13;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B52B;
+Reference = C5;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B5F3;
+Reference = C6;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B6BB;
+Reference = C8;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B783;
+Reference = C9;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B84B;
+Reference = C10;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B913;
+Reference = C11;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54B9DB;
+Reference = C12;
+ValeurCmp = CAP0603-CAP;
+IdModule  = 0603-CAP;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54BAA3;
+Reference = D1;
+ValeurCmp = SMD-PACKAGES_ZMM;
+IdModule  = SMD-PACKAGES_SOD80;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54BB6B;
+Reference = D2;
+ValeurCmp = SMD-PACKAGES_ZMMM;
+IdModule  = SMD-PACKAGES_MELF-D;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C33B;
+Reference = IC0;
+ValeurCmp = HW_INFINEON_IPD90P04P4L-04;
+IdModule  = HW-INFINEON_TO-252-3-313-L;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C403;
+Reference = R1;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C4CB;
+Reference = R2;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C593;
+Reference = R3;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C65B;
+Reference = R4;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C723;
+Reference = R5;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C7EB;
+Reference = R6;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C8B3;
+Reference = R7;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54C97B;
+Reference = R8;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CA43;
+Reference = R9;
+ValeurCmp = RESISTOR0603-RES;
+IdModule  = 0603-RES;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CB0B;
+Reference = SHAPE1;
+ValeurCmp = ARDUINO_SHIELD;
+IdModule  = XMC1100_FOR_ARDUINO;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CBD3;
+Reference = VP_0;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CC9B;
+Reference = VP_1;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CD63;
+Reference = VP_2;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CE2B;
+Reference = VP_3;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CEF3;
+Reference = VP_4;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54CFBB;
+Reference = VP_5;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D083;
+Reference = VP_6;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D14B;
+Reference = VP_7;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D213;
+Reference = VP_8;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D2DB;
+Reference = VP_9;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D3A3;
+Reference = VP_10;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D46B;
+Reference = VP_11;
+ValeurCmp = VPDEV0;
+IdModule  = VPAC0;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D533;
+Reference = VP_12;
+ValeurCmp = VPDEV1;
+IdModule  = VPAC1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D5FB;
+Reference = VP_13;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D6C3;
+Reference = VP_14;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D78B;
+Reference = VP_15;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D853;
+Reference = VP_16;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D91B;
+Reference = VP_17;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54D9E3;
+Reference = VP_18;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54DAAB;
+Reference = VP_19;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54DB73;
+Reference = VP_20;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54DC3B;
+Reference = VP_21;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54DD03;
+Reference = VP_22;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54DDCB;
+Reference = VP_23;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54DE93;
+Reference = VP_24;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54DF5B;
+Reference = VP_25;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E023;
+Reference = VP_26;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E0EB;
+Reference = VP_27;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E1B3;
+Reference = VP_28;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E27B;
+Reference = VP_29;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E343;
+Reference = VP_30;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E40B;
+Reference = VP_31;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E4D3;
+Reference = VP_32;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E59B;
+Reference = VP_33;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E663;
+Reference = VP_34;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E72B;
+Reference = VP_35;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E7F3;
+Reference = VP_36;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E8BB;
+Reference = VP_37;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54E983;
+Reference = VP_38;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54EA4B;
+Reference = VP_39;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54EB13;
+Reference = VP_40;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54EBDB;
+Reference = VP_41;
+ValeurCmp = VPDEV1;
+IdModule  = VPAC1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54ECA3;
+Reference = VP_42;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54ED6B;
+Reference = VP_43;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54EE33;
+Reference = VP_44;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54EEFB;
+Reference = VP_45;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54EFC3;
+Reference = VP_46;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F08B;
+Reference = VP_47;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F153;
+Reference = VP_48;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F21B;
+Reference = VP_49;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F2E3;
+Reference = VP_50;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F3AB;
+Reference = VP_51;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F473;
+Reference = VP_52;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F53B;
+Reference = VP_53;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F603;
+Reference = VP_54;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F6CB;
+Reference = VP_55;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F793;
+Reference = VP_56;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F85B;
+Reference = VP_57;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F923;
+Reference = VP_58;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54F9EB;
+Reference = VP_59;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54FAB3;
+Reference = VP_60;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54FB7B;
+Reference = VP_61;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54FC43;
+Reference = VP_62;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54FD0B;
+Reference = VP_63;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54FDD3;
+Reference = VP_64;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54FE9B;
+Reference = VP_65;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E54FF63;
+Reference = VP_66;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E55002B;
+Reference = VP_67;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E5500F3;
+Reference = VP_68;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E5501BB;
+Reference = VP_69;
+ValeurCmp = VPDEV2;
+IdModule  = VPAC2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550283;
+Reference = VP_70;
+ValeurCmp = VPDEV1;
+IdModule  = VPAC1;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E55034B;
+Reference = VP_71;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550413;
+Reference = VP_72;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E5504DB;
+Reference = VP_73;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E5505A3;
+Reference = VP_74;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E55066B;
+Reference = VP_75;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550733;
+Reference = VP_76;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E5507FB;
+Reference = VP_77;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E5508C3;
+Reference = VP_78;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E55098B;
+Reference = VP_79;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550A53;
+Reference = VP_80;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550B1B;
+Reference = VP_81;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550BE3;
+Reference = VP_82;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550CAB;
+Reference = VP_83;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550D73;
+Reference = VP_84;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550E3B;
+Reference = VP_85;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550F03;
+Reference = VP_86;
+ValeurCmp = VPDEV3;
+IdModule  = VPAC3;
+EndCmp
+
+BeginCmp
+TimeStamp = /5E550FCB;
+Reference = VP_87;
+ValeurCmp = VPDEV1;
+IdModule  = VPAC1;
+EndCmp
+
+EndListe
