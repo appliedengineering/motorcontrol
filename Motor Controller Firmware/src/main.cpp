@@ -3,12 +3,13 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.26-2
+ * Version 2020.02.26-4
  */
 
 #include <Arduino.h>
 
 /******************** BEGIN Configuration ********************/
+#define MINIMUM_DUTY_DETECTION false
 #define TELEMETRY true
 #define OVERCURRENT_PROTECTION true
 #define SOLAR_MPPT false
@@ -36,9 +37,12 @@ unsigned long previousMillis = 0;               // (ms)
 unsigned long currentMillis;                    // (ms)
 const long interval = rampTime / pwmResolution; // (ms)
 
-int current;      // (?)
-int duty = 0;     // (%)
-int lastDuty = 0; // (%)
+int current;        // (?)
+#if MINIMUM_DUTY_DETECTION
+  int zeroCurrent;  // (?)
+#endif
+int duty = 0;       // (%)
+int lastDuty = 0;   // (%)
 
 bool buttonPressed;
 /******************** END Global Variables *******************/
@@ -66,6 +70,16 @@ void setup()
   digitalWrite(dir2, LOW);     // Make sure IN_2 starts OFF
   digitalWrite(enable1, HIGH); // Enable Output 1
   digitalWrite(enable2, LOW);  // Disable Output 2
+
+  #if MINIMUM_DUTY_DETECTION
+    /********** Set Zero Current ********/
+    // Initialize ADC circuitry and discard first dummy sample
+    (void)analogRead(isense1);
+    // Can only measure current when HIGH, so we must pulse IN_1
+    digitalWrite(dir1, HIGH);
+    zeroCurrent = analogRead(isense1);
+    digitalWrite(dir1, LOW);
+  #endif
 }
 /******************** END Setup ******************************/
 
@@ -74,6 +88,7 @@ void setPWM()
 {
   if (duty == 0)
   {
+    // Turn off PWM
     TCCR2B = _BV(WGM22);
   }
   else
@@ -93,7 +108,7 @@ void setPWM()
 /******************** BEGIN Main Loop ************************/
 void loop()
 {
-  if (duty < 1)
+  if (duty < 0)
   {
     duty = 0;
   }
@@ -102,7 +117,7 @@ void loop()
     duty = 100;
   }
 
-  if (lastDuty != duty)
+  if (duty != lastDuty)
   {
     setPWM();
   }
@@ -125,14 +140,18 @@ void loop()
     if (buttonPressed && duty < 100)
     {
       duty++;
+      setPWM();
     }
     else if (!buttonPressed && duty > 0)
     {
       duty--;
+      setPWM();
     }
-    setPWM();
 
     current = analogRead(isense1);
+    #if MINIMUM_DUTY_DETECTION
+      current -= zeroCurrent;
+    #endif
     #if TELEMETRY
       Serial.println(current);
     #endif
