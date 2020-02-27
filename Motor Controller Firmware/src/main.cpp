@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.26-1
+ * Version 2020.02.26-2
  */
 
 #include <Arduino.h>
@@ -32,7 +32,6 @@ const long interval = rampTime / pwmResolution; // (ms)
 
 int current;     // (?)
 int duty;        // (%)
-int zeroCurrent; // (?)
 
 bool buttonPressed = false;
 bool lastButtonState = false;
@@ -42,6 +41,7 @@ bool doneRamping = false;
 /******************** BEGIN Setup ****************************/
 void setup()
 {
+  Serial.begin(9600);
   /********** Configure Pins **********/
   // (0.67 volts is 10 amps, a good limit per driver)
   // (revised, analog 0, 1 volt delta is 20 amps delta with a 1k resistor, current ratio of 20,000)
@@ -59,14 +59,6 @@ void setup()
   // digitalWrite(dir2, LOW);   // Make sure IN_2 starts OFF (hardwired to mirror IN_1)
   digitalWrite(enable1, HIGH);  // Enable Output 1
   digitalWrite(enable2, LOW);   // Disable Output 2
-
-  /********** Set Zero Current ********/
-  // Initialize ADC circuitry and discard first dummy sample
-  (void)analogRead(isense1);
-  // Can only measure current when HIGH, so we must pulse IN_1
-  digitalWrite(dir1, HIGH);
-  zeroCurrent = analogRead(isense1);
-  digitalWrite(dir1, LOW);
 }
 /******************** END Setup ******************************/
 
@@ -133,7 +125,7 @@ void loop()
       setPWM();
 
       current = analogRead(isense1);
-      current -= zeroCurrent;
+      Serial.println(current);
     }
   }
 
@@ -141,12 +133,6 @@ void loop()
   if (current > 200)
   {
     duty -= 10;
-  }
-
-  // Find the minimum duty.
-  if (current < 0)
-  {
-    duty++;
   }
 
   /********** Solar MPPT **************/
