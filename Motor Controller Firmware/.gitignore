@@ -1,0 +1,20 @@
+### PlatformIO ###
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
+
+# Keep hex binary
+.pio/*
+!.pio/build
+.pio/build/*
+!.pio/build/uno
+.pio/build/uno/*
+!.pio/build/uno/firmware.hex
+
+### VisualStudioCode ###
+.vscode
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
