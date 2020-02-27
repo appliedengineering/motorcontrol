@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.26-4
+ * Version 2020.02.26-5
  */
 
 #include <Arduino.h>
@@ -11,7 +11,7 @@
 /******************** BEGIN Configuration ********************/
 #define MINIMUM_DUTY_DETECTION false
 #define TELEMETRY true
-#define OVERCURRENT_PROTECTION true
+#define OVERCURRENT_PROTECTION false
 #define SOLAR_MPPT false
 /******************** END Configuration **********************/
 
@@ -91,6 +91,10 @@ void setPWM()
     // Turn off PWM
     TCCR2B = _BV(WGM22);
   }
+  else if (lastDuty != 0)
+  {
+    OCR2B = duty - 1;
+  }
   else
   {
     // Set up 20kHz Fast PWM with OCR2A as TOP and Prescaler Divide Clock by 8 on Timer 2
@@ -120,6 +124,7 @@ void loop()
   if (duty != lastDuty)
   {
     setPWM();
+    lastDuty = duty;
   }
 
   if (digitalRead(button) == HIGH)
@@ -140,12 +145,10 @@ void loop()
     if (buttonPressed && duty < 100)
     {
       duty++;
-      setPWM();
     }
     else if (!buttonPressed && duty > 0)
     {
       duty--;
-      setPWM();
     }
 
     current = analogRead(isense1);
@@ -155,22 +158,21 @@ void loop()
     #if TELEMETRY
       Serial.println(current);
     #endif
+
+    #if OVERCURRENT_PROTECTION
+      if (current > 200)
+      {
+        duty -= 2;
+      }
+    #endif
+
+    #if SOLAR_MPPT
+      // Keep input voltage above 30 volts (30/11 * 1024/5 = 559).
+      if (analogRead(vsense) < 559)
+      {
+        duty -= 2;
+      }
+    #endif
   }
-  lastDuty = duty;
-
-  #if OVERCURRENT_PROTECTION
-    if (current > 200)
-    {
-      duty -= 1;
-    }
-  #endif
-
-  #if SOLAR_MPPT
-    // Keep input voltage above 30 volts (30/11 * 1024/5 = 559).
-    if (analogRead(vsense) < 559)
-    {
-      duty -= 1;
-    }
-  #endif
 }
 /******************** END Main Loop **************************/
