@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.28-1
+ * Version 2020.02.28-2
  */
 
 #include <Arduino.h>
@@ -37,9 +37,9 @@
 
 unsigned long previousMillis = 0;                       // (ms)
 unsigned long currentMillis;                            // (ms)
-const long intervalFast = rampFastTime / pwmResolution; // (ms)
-const long intervalSlow = rampSlowTime / pwmResolution; // (ms)
-int interval = intervalFast;                            // (ms)
+const int intervalFast = rampFastTime / pwmResolution;  // (ms)
+const int intervalSlow = rampSlowTime / pwmResolution;  // (ms)
+unsigned int interval = intervalFast;                   // (ms)
 
 int current;        // (?)
 #if MINIMUM_DUTY_DETECTION
