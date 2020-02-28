@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.26-5
+ * Version 2020.02.28-1
  */
 
 #include <Arduino.h>
@@ -30,12 +30,16 @@
 #define pwmFreq 20000 // (Hz)
 #define pwmResolution ((F_CPU / 8) / pwmFreq)
 
-// The motor will take 5 seconds to ramp up or ramp down.
-#define rampTime 5 * 1000 // (ms)
+// The motor will ramp up as quickly as possible.
+#define rampFastTime 6 * 1000   // (ms)
+// The motor will take longer to ramp down at lower duty cycles.
+#define rampSlowTime 10 * 1000 // (ms)
 
-unsigned long previousMillis = 0;               // (ms)
-unsigned long currentMillis;                    // (ms)
-const long interval = rampTime / pwmResolution; // (ms)
+unsigned long previousMillis = 0;                       // (ms)
+unsigned long currentMillis;                            // (ms)
+const long intervalFast = rampFastTime / pwmResolution; // (ms)
+const long intervalSlow = rampSlowTime / pwmResolution; // (ms)
+int interval = intervalFast;                            // (ms)
 
 int current;        // (?)
 #if MINIMUM_DUTY_DETECTION
@@ -112,6 +116,7 @@ void setPWM()
 /******************** BEGIN Main Loop ************************/
 void loop()
 {
+  // Duty must be between 0 and 100 (%).
   if (duty < 0)
   {
     duty = 0;
@@ -121,7 +126,28 @@ void loop()
     duty = 100;
   }
 
-  if (duty != lastDuty)
+  // Check how duty should be updated.
+  if (duty < lastDuty && duty < 25)
+  {
+    interval = intervalSlow;
+  }
+  else
+  {
+    interval = intervalFast;
+  }
+
+  // Sanity checks before setting PWM output.
+  if (duty > lastDuty + 2)
+  {
+    duty = lastDuty + 2;
+  }
+  else if (duty < lastDuty - 2)
+  {
+    duty = lastDuty - 2;
+  }
+  
+  // Set PWM output and store value before duty is updated.
+  else if (duty != lastDuty)
   {
     setPWM();
     lastDuty = duty;
