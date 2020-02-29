@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.28-4
+ * Version 2020.02.28-5
  */
 
 #include <Arduino.h>
@@ -61,9 +61,9 @@
 
   unsigned long previousMillis = 0;                       // (ms)
   unsigned long currentMillis;                            // (ms)
-  const long intervalFast = rampFastTime / pwmResolution; // (ms)
-  const long intervalSlow = rampSlowTime / pwmResolution; // (ms)
-  unsigned long interval = intervalSlow;                  // (ms)
+  const int intervalFast = rampFastTime / pwmResolution;  // (ms)
+  const int intervalSlow = rampSlowTime / pwmResolution;  // (ms)
+  unsigned int interval = intervalSlow;                   // (ms)
 
   int current;        // (?)
   #if MINIMUM_DUTY_DETECTION
@@ -71,10 +71,10 @@
   #endif
   int duty = 0;       // (%)
   int lastDuty = 0;   // (%)
+  int targetDuty = 0; // (%)
 
   #if USE_THROTTLE
     int rawDuty = 0;    // (ADC)
-    int targetDuty = 0; // (%)
   #endif
 
   bool buttonPressed;
@@ -245,16 +245,6 @@ void setup()
       duty = 100;
     }
 
-    // Check how duty should be updated.
-    if (duty < lastDuty)
-    {
-      interval = intervalSlow;
-    }
-    else
-    {
-      interval = intervalFast;
-    }
-
     // Sanity checks before setting PWM output.
     if (duty > lastDuty + 2)
     {
@@ -281,23 +271,27 @@ void setup()
       rawDuty /= 5;
       
       // 1 V (205) is 0% and 4 V (820) is 100%
-      if (rawDuty < 205) rawDuty = 205;
-      else if (rawDuty > 820) rawDuty = 820;
-      targetDuty = (rawDuty - 205) * (100/615);
-
       if (rawDuty < 205)
-    #else
-      targetDuty = 100;
-
-      if (digitalReadFast(button) == HIGH)
-    #endif
       {
-        buttonPressed = false;
+        rawDuty = 205;
       }
+      else if (rawDuty > 820)
+      {
+        rawDuty = 820;
+      }
+      targetDuty = (rawDuty - 205) * (100/615);
+    #else
+      // Treat an unpressed button (HIGH) as zero throttle.
+      if (digitalReadFast(button) == HIGH)
+      {
+        targetDuty = 0;
+      }
+      // Treat a pressed button (LOW) as full throttle.
       else
       {
-        buttonPressed = true;
+        targetDuty = 100;
       }
+    #endif
 
     // Check whether current and duty should be updated.
     currentMillis = millis();
@@ -305,13 +299,15 @@ void setup()
     {
       previousMillis = currentMillis;
 
-      if (buttonPressed && duty < targetDuty)
+      if (duty < targetDuty)
       {
         duty++;
+        interval = intervalFast;
       }
-      else if (!buttonPressed && duty > targetDuty)
+      else if (duty > targetDuty)
       {
         duty--;
+        interval = intervalSlow;
       }
 
       current = analogReadFast(isense1);
