@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.26-5
+ * Version 2020.02.28-2
  */
 
 #include <Arduino.h>
@@ -41,13 +41,17 @@
 #else
   #define pwmFreq 20000 // (Hz)
   #define pwmResolution ((F_CPU / 8) / pwmFreq)
+  
+  // The motor will ramp up as quickly as possible.
+  #define rampFastTime 6 * 1000   // (ms)
+  // The motor will take longer to ramp down at lower duty cycles.
+  #define rampSlowTime 10 * 1000  // (ms)
 
-  // The motor will take 5 seconds to ramp up or ramp down.
-  #define rampTime 5 * 1000 // (ms)
-
-  unsigned long previousMillis = 0;               // (ms)
-  unsigned long currentMillis;                    // (ms)
-  const long interval = rampTime / pwmResolution; // (ms)
+  unsigned long previousMillis = 0;                       // (ms)
+  unsigned long currentMillis;                            // (ms)
+  const int intervalFast = rampFastTime / pwmResolution;  // (ms)
+  const int intervalSlow = rampSlowTime / pwmResolution;  // (ms)
+  unsigned int interval = intervalFast;                   // (ms)
 
   int current;        // (?)
   #if MINIMUM_DUTY_DETECTION
@@ -140,7 +144,7 @@ void setup()
       delayMicroseconds(rampSpeed * 50);  // When in off state, we don't monkey with the IO.
     }
     
-    // Everything below only takes place every millisecond 10 pulses with the drivers LOW
+    // Everything below only takes place every millisecond after 20 pulses with the drivers LOW
     // ADC reads 1023 for a 5 V input so raw = volts * 1024/5
     // Current inputs are about .07 V per A according to datasheet, but we should test this.
     
@@ -175,7 +179,7 @@ void setup()
     #endif
 
     #if UNDERVOLTAGE_PREVENTION
-      if (analogRead(vsense) < 558) duty = duty - 10; // Keep input voltage above 30 volts (30/11 * 1024/5 = 559) to get more power out on solar.
+      if (analogRead(vsense) < 559) duty = duty - 10; // Keep input voltage above 30 volts (30/11 * 1024/5 = 559) to get more power out on solar.
     #endif
     #if OVERVOLTAGE_PREVENTION
       if (analogRead(vsense) > 744) duty = duty + 3;  // Keep input voltage below 40 volts (40/11 * 1024/5 = 745) to protect against regen on solar.
@@ -221,6 +225,27 @@ void setup()
       duty = 100;
     }
 
+    // Check how duty should be updated.
+    if (duty < lastDuty && duty < 25)
+    {
+      interval = intervalSlow;
+    }
+    else
+    {
+      interval = intervalFast;
+    }
+
+    // Sanity checks before setting PWM output.
+    if (duty > lastDuty + 2)
+    {
+      duty = lastDuty + 2;
+    }
+    else if (duty < lastDuty - 2)
+    {
+      duty = lastDuty - 2;
+    }
+    
+    // Set PWM output and store value before duty is updated.
     if (duty != lastDuty)
     {
       setPWM();
