@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.28-2
+ * Version 2020.02.28-3
  */
 
 #include <Arduino.h>
@@ -13,8 +13,9 @@
 /******************** BEGIN Configuration ********************/
 #define MINIMUM_DUTY_DETECTION false
 #define OVERCURRENT_PROTECTION false
-#define PARALLEL_OUTPUTS true
+#define PARALLEL_OUTPUTS false
 #define TELEMETRY true
+#define USE_THROTTLE true
 
 // Enable these features when running on solar.
 #define OVERVOLTAGE_PREVENTION false
@@ -26,7 +27,13 @@
 #define dir2 11
 #define enable1 12
 #define enable2 13
-#define button 0
+
+#if USE_THROTTLE
+  #define throttle A2
+#else
+  #define button 0
+#endif
+
 #define isense1 A0
 #define isense2 A1
 #define vsense A3
@@ -49,9 +56,9 @@
 
   unsigned long previousMillis = 0;                       // (ms)
   unsigned long currentMillis;                            // (ms)
-  const int intervalFast = rampFastTime / pwmResolution;  // (ms)
-  const int intervalSlow = rampSlowTime / pwmResolution;  // (ms)
-  unsigned int interval = intervalFast;                   // (ms)
+  const long intervalFast = rampFastTime / pwmResolution; // (ms)
+  const long intervalSlow = rampSlowTime / pwmResolution; // (ms)
+  unsigned long interval = intervalFast;                  // (ms)
 
   int current;        // (?)
   #if MINIMUM_DUTY_DETECTION
@@ -59,6 +66,11 @@
   #endif
   int duty = 0;       // (%)
   int lastDuty = 0;   // (%)
+
+  #if USE_THROTTLE
+    int rawDuty = 0;  // (ADC)
+    int maxDuty = 0;  // (%)
+  #endif
 
   bool buttonPressed;
 #endif
@@ -73,14 +85,18 @@ void setup()
   /********** Configure Pins **********/
   // (0.67 volts is 10 amps, a good limit per driver)
   // (revised, analog 0, 1 volt delta is 20 amps delta with a 1k resistor, current ratio of 20,000)
-  pinMode(dir1, OUTPUT);         // IN_1
-  pinMode(dir2, OUTPUT);         // IN_2
-  pinMode(enable1, OUTPUT);      // INH_1
-  pinMode(enable2, OUTPUT);      // INH_2
-  pinMode(button, INPUT_PULLUP); // Pin 0
-  pinMode(isense1, INPUT);       // IS_1
-  pinMode(isense2, INPUT);       // IS_2
-  pinMode(vsense, INPUT);        // Vbat
+  pinMode(dir1, OUTPUT);            // IN_1
+  pinMode(dir2, OUTPUT);            // IN_2
+  pinMode(enable1, OUTPUT);         // INH_1
+  pinMode(enable2, OUTPUT);         // INH_2
+  #if USE_THROTTLE
+    pinMode(throttle, INPUT);       // A2
+  #else
+    pinMode(button, INPUT_PULLUP);  // Pin 0
+  #endif
+  pinMode(isense1, INPUT);          // IS_1
+  pinMode(isense2, INPUT);          // IS_2
+  pinMode(vsense, INPUT);           // Vbat
 
   /********** Set Pins ****************/
   digitalWrite(dir1, LOW);     // Make sure IN_1 starts OFF
@@ -152,7 +168,6 @@ void setup()
     PORTB = 0b011000;       // Simultaneously set INH_2 (13) OFF, INH_1 (12) ON, and IN_2 (11) HIGH
     PORTD ^= 0b00001000;    // Toggle IN_1 (3) HIGH
     PORTB ^= 0b100000;      // Toggle INH_2 (13) ON again
-    delayMicroseconds(1);
     current = analogReadFast(0);
     PORTB ^= 0b100000;      // Toggle INH_2 (13) OFF
     PORTD ^= 0b00001000;    // Toggle IN_1 (3) LOW
@@ -226,7 +241,7 @@ void setup()
     }
 
     // Check how duty should be updated.
-    if (duty < lastDuty && duty < 25)
+    if (duty < lastDuty)
     {
       interval = intervalSlow;
     }
@@ -252,14 +267,24 @@ void setup()
       lastDuty = duty;
     }
 
-    if (digitalRead(button) == HIGH)
-    {
-      buttonPressed = false;
-    }
-    else
-    {
-      buttonPressed = true;
-    }
+    #if USE_THROTTLE
+    // 1 V (205) is 0% and 4 V (820) is 100%
+    rawDuty = analogReadFast(throttle);
+    maxDuty = (rawDuty - 205) * (100/615);
+
+      if (rawDuty < 205)
+    #else
+    maxDuty = 100;
+
+      if (digitalReadFast(button) == HIGH)
+    #endif
+      {
+        buttonPressed = false;
+      }
+      else
+      {
+        buttonPressed = true;
+      }
 
     // Check whether current and duty should be updated.
     currentMillis = millis();
@@ -267,11 +292,11 @@ void setup()
     {
       previousMillis = currentMillis;
 
-      if (buttonPressed && duty < 100)
+      if (buttonPressed && duty < maxDuty)
       {
         duty++;
       }
-      else if (!buttonPressed && duty > 0)
+      else if (!buttonPressed && duty > maxDuty)
       {
         duty--;
       }
