@@ -3,7 +3,7 @@
  * Motor Controller Firmware
  * by Andrew Berkun, Alex Liu, and William Zhou
  * 
- * Version 2020.02.28-3
+ * Version 2020.02.28-4
  */
 
 #include <Arduino.h>
@@ -15,7 +15,12 @@
 #define OVERCURRENT_PROTECTION false
 #define PARALLEL_OUTPUTS false
 #define TELEMETRY true
-#define USE_THROTTLE true
+
+// Throttle must be disabled when using parallel outputs.
+// (Function to be implemented later.)
+#if !PARALLEL_OUTPUTS
+  #define USE_THROTTLE true
+#endif
 
 // Enable these features when running on solar.
 #define OVERVOLTAGE_PREVENTION false
@@ -58,7 +63,7 @@
   unsigned long currentMillis;                            // (ms)
   const long intervalFast = rampFastTime / pwmResolution; // (ms)
   const long intervalSlow = rampSlowTime / pwmResolution; // (ms)
-  unsigned long interval = intervalFast;                  // (ms)
+  unsigned long interval = intervalSlow;                  // (ms)
 
   int current;        // (?)
   #if MINIMUM_DUTY_DETECTION
@@ -68,8 +73,8 @@
   int lastDuty = 0;   // (%)
 
   #if USE_THROTTLE
-    int rawDuty = 0;  // (ADC)
-    int maxDuty = 0;  // (%)
+    int rawDuty = 0;    // (ADC)
+    int targetDuty = 0; // (%)
   #endif
 
   bool buttonPressed;
@@ -178,7 +183,7 @@ void setup()
       Serial.println(current);
     #endif
     
-    if (digitalRead(0) == HIGH) buttonPressed = 0; else buttonPressed = 1;
+    if (digitalReadFast(button) == HIGH) buttonPressed = 0; else buttonPressed = 1;
     if (buttonPressed == 1) duty++; else duty--;
     
     #if OVERCURRENT_PROTECTION
@@ -194,10 +199,10 @@ void setup()
     #endif
 
     #if UNDERVOLTAGE_PREVENTION
-      if (analogRead(vsense) < 559) duty = duty - 10; // Keep input voltage above 30 volts (30/11 * 1024/5 = 559) to get more power out on solar.
+      if (analogReadFast(vsense) < 559) duty = duty - 10; // Keep input voltage above 30 volts (30/11 * 1024/5 = 559) to get more power out on solar.
     #endif
     #if OVERVOLTAGE_PREVENTION
-      if (analogRead(vsense) > 744) duty = duty + 3;  // Keep input voltage below 40 volts (40/11 * 1024/5 = 745) to protect against regen on solar.
+      if (analogReadFast(vsense) > 744) duty = duty + 3;  // Keep input voltage below 40 volts (40/11 * 1024/5 = 745) to protect against regen on solar.
     #endif
   }
   /******************** END Main Loop **************************/
@@ -268,13 +273,21 @@ void setup()
     }
 
     #if USE_THROTTLE
-    // 1 V (205) is 0% and 4 V (820) is 100%
-    rawDuty = analogReadFast(throttle);
-    maxDuty = (rawDuty - 205) * (100/615);
+      // Use average of 5 samples to smooth readings.
+      for (int i = 0; i < 5; i++)
+      {
+        rawDuty += analogReadFast(throttle);
+      }
+      rawDuty /= 5;
+      
+      // 1 V (205) is 0% and 4 V (820) is 100%
+      if (rawDuty < 205) rawDuty = 205;
+      else if (rawDuty > 820) rawDuty = 820;
+      targetDuty = (rawDuty - 205) * (100/615);
 
       if (rawDuty < 205)
     #else
-    maxDuty = 100;
+      targetDuty = 100;
 
       if (digitalReadFast(button) == HIGH)
     #endif
@@ -292,16 +305,16 @@ void setup()
     {
       previousMillis = currentMillis;
 
-      if (buttonPressed && duty < maxDuty)
+      if (buttonPressed && duty < targetDuty)
       {
         duty++;
       }
-      else if (!buttonPressed && duty > maxDuty)
+      else if (!buttonPressed && duty > targetDuty)
       {
         duty--;
       }
 
-      current = analogRead(isense1);
+      current = analogReadFast(isense1);
       #if MINIMUM_DUTY_DETECTION
         current -= zeroCurrent;
         if (current < 0)
@@ -323,7 +336,7 @@ void setup()
       #if UNDERVOLTAGE_PREVENTION
         // Keep input voltage above 30 volts (30/11 * 1024/5 = 559).
         // Gets more power out on solar.
-        if (analogRead(vsense) < 559)
+        if (analogReadFast(vsense) < 559)
         {
           duty -= 2;
         }
@@ -331,7 +344,7 @@ void setup()
       #if OVERVOLTAGE_PREVENTION
         // Keep input voltage below 40 volts (40/11 * 1024/5 = 745).
         // Protects against regen on solar.
-        if (analogRead(vsense) > 744)
+        if (analogReadFast(vsense) > 744)
         {
           duty += 2;
         }
