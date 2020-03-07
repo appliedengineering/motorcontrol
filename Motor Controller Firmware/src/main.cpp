@@ -19,7 +19,7 @@
 // Throttle must be disabled when using parallel outputs.
 // (Function to be implemented later.)
 #if !PARALLEL_OUTPUTS
-  #define USE_THROTTLE true
+  #define USE_THROTTLE false
 #endif
 
 // Enable these features when running on solar.
@@ -127,12 +127,12 @@ void setup()
   {
     if (duty < 50) duty = 50;     // If duty cycle < 1%, turn it off.
     if (duty > 4900) duty = 4900; // Don't go above 99%.
-    // timeOn = (duty / 50) - 1;  // (µS) Assume min. on time is 1 µS, which is delayMicroseconds(0).
-    // timeOff = 100 - d2 - 1;    // (µS) Assume min. off time is 1 µS.
+    timeOn = (duty / 50) - 1;     // (µS) Assume min. on time is 1 µS, which is delayMicroseconds(0).
+    timeOff = 100 - timeOn - 1;   // (µS) Assume min. off time is 1 µS.
     
-    timeOff = 500 - (duty / 10);  // Range from 500 µS down to almost zero.  Means we start at 2 kHz and frequency goes up as we ramp the motor up.
-    timeOn = 50 - timeOff;        // Constant 20 kHz period plus switching time if timeOff < 100 (if duty > 4500).
-    if (timeOn < 1) timeOn = 1;   // Min. on time unless duty > 4500
+    // timeOff = 500 - (duty / 10);  // Range from 500 µS down to almost zero.  Means we start at 2 kHz and frequency goes up as we ramp the motor up.
+    // timeOn = 50 - timeOff;        // Constant 20 kHz period plus switching time if timeOff < 100 (if duty > 4500).
+    if (timeOn < 1) timeOn = 1;      // Min. on time unless duty > 4500
     // So frequency only hits 20 kHz at the end of the scale and we get to 50%, our expected operating point at 4750.
     
     if (duty > 51)
@@ -213,7 +213,7 @@ void setup()
     if (duty == 0)
     {
       // Turn off PWM
-      TCCR2B = _BV(WGM22);
+      TCCR2A &= ~(_BV(COM2A1) | _BV(COM2B1));
     }
     else if (lastDuty != 0)
     {
