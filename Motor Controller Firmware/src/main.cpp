@@ -11,8 +11,8 @@
 #include <digitalWriteFast.h>
 
 /******************** BEGIN Configuration ********************/
-#define MINIMUM_DUTY_DETECTION false
-#define OVERCURRENT_PROTECTION false
+#define MINIMUM_DUTY_DETECTION true
+#define OVERCURRENT_PROTECTION true
 #define PARALLEL_OUTPUTS false
 #define TELEMETRY true
 
@@ -23,8 +23,8 @@
 #endif
 
 // Enable these features when running on solar.
-#define OVERVOLTAGE_PREVENTION false
-#define UNDERVOLTAGE_PREVENTION false
+#define OVERVOLTAGE_PREVENTION true
+#define UNDERVOLTAGE_PREVENTION true
 /******************** END Configuration **********************/
 
 /******************** BEGIN Pin Definitions ******************/
@@ -65,16 +65,16 @@
   const int intervalSlow = rampSlowTime / pwmResolution;  // (ms)
   unsigned int interval = intervalSlow;                   // (ms)
 
-  int current;        // (?)
+  int current, voltage; // (ADC)
   #if MINIMUM_DUTY_DETECTION
-    int zeroCurrent;  // (?)
+    int zeroCurrent;    // (ADC)
   #endif
   int duty = 0;       // (%)
   int lastDuty = 0;   // (%)
   int targetDuty = 0; // (%)
 
   #if USE_THROTTLE
-    int rawDuty = 0;    // (ADC)
+    int rawDuty = 0;  // (ADC)
   #endif
 
   bool buttonPressed;
@@ -113,10 +113,11 @@ void setup()
     /********** Set Zero Current ********/
     // Initialize ADC circuitry and discard first dummy sample
     (void)analogRead(isense1);
-    // Can only measure current when HIGH, so we must pulse IN_1
-    digitalWriteFast(dir1, HIGH);
-    zeroCurrent = analogReadFast(isense1);
-    digitalWriteFast(dir1, LOW);
+    for (int i = 0; i < 5; i++)
+    {
+      zeroCurrent += analogReadFast(isense1);
+    }
+    zeroCurrent /= 5;
   #endif
 }
 /******************** END Setup ******************************/
@@ -310,16 +311,20 @@ void setup()
         interval = intervalSlow;
       }
 
-      current = analogReadFast(isense1);
+      for (int i = 0; i < 5; i++)
+      {
+        current += analogReadFast(isense1);
+        voltage += analogReadFast(vsense);
+      }
+      current /= 5;
+      voltage /= 5;
+
       #if MINIMUM_DUTY_DETECTION
         current -= zeroCurrent;
         if (current < 0)
         {
           duty++;
         }
-      #endif
-      #if TELEMETRY
-        Serial.println(current);
       #endif
 
       #if OVERCURRENT_PROTECTION
@@ -332,18 +337,25 @@ void setup()
       #if UNDERVOLTAGE_PREVENTION
         // Keep input voltage above 30 volts (30/11 * 1024/5 = 559).
         // Gets more power out on solar.
-        if (analogReadFast(vsense) < 559)
+        if (voltage < 559)
         {
           duty -= 2;
         }
       #endif
       #if OVERVOLTAGE_PREVENTION
-        // Keep input voltage below 40 volts (40/11 * 1024/5 = 745).
+        // Keep input voltage below 34 volts (34/11 * 1024/5 = 633).
         // Protects against regen on solar.
-        if (analogReadFast(vsense) > 744)
+        if (voltage > 633)
         {
           duty += 2;
         }
+      #endif
+
+      #if TELEMETRY
+        Serial.print(voltage * (44.8/1024));
+        Serial.print(" V, ");
+        Serial.print(current / 10.24);
+        Serial.println(" A");
       #endif
     }
   }
