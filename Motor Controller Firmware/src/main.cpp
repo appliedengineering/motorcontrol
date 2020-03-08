@@ -11,7 +11,7 @@
 #include <digitalWriteFast.h>
 
 /******************** BEGIN Configuration ********************/
-#define MINIMUM_DUTY_DETECTION true
+#define MINIMUM_DUTY_DETECTION false
 #define OVERCURRENT_PROTECTION true
 #define PARALLEL_OUTPUTS false
 #define TELEMETRY true
@@ -335,17 +335,17 @@ void setup()
       #endif
 
       #if UNDERVOLTAGE_PREVENTION
-        // Keep input voltage above 30 volts (30/11 * 1024/5 = 559).
+        // Keep input voltage above 30 volts (30 * 1024/44.8 = 686).
         // Gets more power out on solar.
-        if (voltage < 559)
+        if (voltage < 702)
         {
           duty -= 2;
         }
       #endif
       #if OVERVOLTAGE_PREVENTION
-        // Keep input voltage below 34 volts (34/11 * 1024/5 = 633).
+        // Keep input voltage below 37 volts (37 * 1024/44.8 = 845).
         // Protects against regen on solar.
-        if (voltage > 633)
+        if (voltage > 845)
         {
           duty += 2;
         }
