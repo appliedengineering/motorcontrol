@@ -85,7 +85,7 @@
 void setup()
 {
   #if TELEMETRY
-    Serial.begin(9600);
+    Serial.begin(115200);
   #endif
   /********** Configure Pins **********/
   // (0.67 volts is 10 amps, a good limit per driver)
@@ -335,9 +335,9 @@ void setup()
       #endif
 
       #if UNDERVOLTAGE_PREVENTION
-        // Keep input voltage above 30 volts (30 * 1024/44.8 = 686).
+        // Keep input voltage above 30.6 volts (30.6 * 1024/44.8 = 700).
         // Gets more power out on solar.
-        if (voltage < 702)
+        if (voltage < 700)
         {
           duty -= 2;
         }
