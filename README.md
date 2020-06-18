@@ -1,11 +1,5 @@
 # motorcontrol
-Brushed DC motor controller and code based around BTN8982 and Arduino Uno
-
----
-
-### PCB todo:
-* Layout
-* Determine input/output connectors and component values
+A brushed DC motor controller based on the BTN8982TA and Arduino Uno
 
 ---
 
@@ -17,7 +11,15 @@ Brushed DC motor controller and code based around BTN8982 and Arduino Uno
 
 ---
 
-### Notes
+### About the PCB
+
+The schematic and layout are completed on Upverter.
+"Dual Drivers" refers to the board design intended for use with two BTN8982TA's in parallel.
+Zip the Gerber files for upload to PCB fabrication services.
+
+---
+
+### About the Firmware
 
 Pulse duration (µs) = (duty/100 * 1/freq) * 10^6
 

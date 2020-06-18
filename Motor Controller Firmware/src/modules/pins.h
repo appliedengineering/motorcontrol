@@ -35,6 +35,8 @@
   #define THROTTLE A2
 #elif INPUT_DEVICE == 2
   #define BUTTON 0
+#elif INPUT_DEVICE == 3
+  #define SELFTEST
 #endif
 
 #define IS_1 A0

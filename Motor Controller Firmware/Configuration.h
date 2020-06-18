@@ -22,8 +22,8 @@
 
 // @section info
 
-// Version info of this build printed to host during boot and "$V".
-#define STRING_VERSION "2020.03.15-1"
+// Version info of this build reported to host (must be YYYY.MM.DD-X format).
+#define STRING_VERSION "2020.06.17-1"
 
 // @section machine
 
@@ -54,6 +54,7 @@
  * 
  *   1 : 1 - 4V throttle
  *   2 : momentary push-button switch
+ *   3 : self-test (loops target duty between 100% and 0% for ramp times)
  * 
  */
 #define INPUT_DEVICE 1
@@ -74,10 +75,10 @@
 #define OUTPUT_MODE 1
 
 // The motor will ramp up as quickly as possible.
-#define RAMP_TIME_FAST 6 * 1000   // (ms)
+#define RAMP_TIME_UP 6 * 1000   // (ms)
 
 // The motor will take longer to ramp down.
-#define RAMP_TIME_SLOW 10 * 1000  // (ms)
+#define RAMP_TIME_DOWN 10 * 1000  // (ms)
 
 //===========================================================================
 //============================= Protections =================================
