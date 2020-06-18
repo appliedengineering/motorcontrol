@@ -16,7 +16,9 @@
 
 #include "inputs.h"
 
-int targetDuty = 0; // (%)
+int targetDuty = 0;     // (%)
+int lastTargetDuty = 0; // (%)
+bool targetReached = false;
 
 #if defined(THROTTLE)
   int inputSamples;
@@ -48,5 +50,17 @@ void readInput() {
       // Treat pressed button (LOW) as 100% throttle.
       targetDuty = 100;
     }
+  #elif defined(SELFTEST)
+    if (targetReached) {
+      if (targetDuty == 0) {
+        targetDuty = 100;
+      } else if (targetDuty == 100) {
+        targetDuty = 0;
+      }
+    }
   #endif
+  if (targetDuty != lastTargetDuty) {
+    targetReached = false;
+  }
+  lastTargetDuty = targetDuty;
 }

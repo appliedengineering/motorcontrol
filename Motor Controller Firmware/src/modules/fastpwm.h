@@ -19,15 +19,15 @@
 #include "nonblocking.h"
 #include "sense.h"
 
-extern int duty;      // (%)
-extern int lastDuty;  // (%)
+extern int duty;        // (%)
+extern int lastDuty;    // (%)
 
-#define PWM_FREQ 20000            // (Hz)
-#define PWM_RESOLUTION ((F_CPU / 8) / PWM_FREQ)
+extern int pwmFreq;     // (Hz)
+extern int pwmResolution;
 
 // Set up nonblocking PWM update task.
-#define INTERVAL_FAST (RAMP_TIME_FAST / PWM_RESOLUTION) // (ms)
-#define INTERVAL_SLOW (RAMP_TIME_SLOW / PWM_RESOLUTION) // (ms)
+#define INTERVAL_UP (RAMP_TIME_UP / pwmResolution)      // (ms)
+#define INTERVAL_DOWN (RAMP_TIME_DOWN / pwmResolution)  // (ms)
 extern NonBlockingTask pwmUpdate;
 
 void setPWM();

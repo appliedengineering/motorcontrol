@@ -22,11 +22,16 @@
 telemetryData boatData;
 
 // Send telemetry every half second.
-NonBlockingTask telemetryUpdate(500);
+NonBlockingTask telemetryUpdate(100);
+
+unsigned int dataLength;
+SerialTransfer dataTransfer;
 
 void configureSerial() {
   Serial.begin(TELEMETRY);
-  boatData.id = 1;
+  dataTransfer.begin(Serial);
+  strlcpy(boatData.version, STRING_VERSION, 13);
+  boatData.psuMode = POWER_SUPPLY;
   Serial.println("Motor Controller Firmware");
   Serial.println("Copyright (c) 2020 Applied Engineering");
   Serial.print("Booted version ");
@@ -35,13 +40,14 @@ void configureSerial() {
 
 void sendData() {
   boatData.throttlePercent = targetDuty;
-  boatData.targetDutyPercent = duty;
+  boatData.dutyPercent = duty;
   boatData.sourceVoltage = voltage * (44.8/1024);
   boatData.pwmCurrent = current / 10.24;
   boatData.mddStatus = mddActive;
   boatData.ocpStatus = ocpActive;
   boatData.uvpStatus = uvpActive;
   boatData.ovpStatus = ovpActive;
-  boatData.length = sizeof(boatData);
-  Serial.write((byte*)&boatData, boatData.length);
+  dataLength = sizeof(boatData);
+  dataTransfer.txObj(boatData, dataLength);
+  dataTransfer.sendData(dataLength);
 }

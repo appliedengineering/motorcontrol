@@ -16,10 +16,13 @@
  */
 
 #include "pins.h"
+#include "nonblocking.h"
 #include <avdweb_AnalogReadFast.h>
 #include <digitalWriteFast.h>
 
-extern int targetDuty;  // (%)
+extern int targetDuty;      // (%)
+extern int lastTargetDuty;  // (%)
+extern bool targetReached;
 
 #if defined(THROTTLE)
   extern int inputSamples;

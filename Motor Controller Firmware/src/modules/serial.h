@@ -23,14 +23,17 @@
 #include "sense.h"
 #include "fastpwm.h"
 #include "protections.h"
+#include <SerialTransfer.h>
+
+extern unsigned int dataLength;
 
 struct telemetryData {
-  // Packet information
-  unsigned int length;
-  unsigned int id;
+  // Firmware info
+  char version[12];
+  int psuMode;
   // Input readings
   int throttlePercent;
-  int targetDutyPercent;
+  int dutyPercent;
   // Sense readings
   float sourceVoltage;
   float pwmCurrent;
@@ -43,6 +46,7 @@ struct telemetryData {
 
 extern telemetryData boatData;
 extern NonBlockingTask telemetryUpdate;
+extern SerialTransfer dataTransfer;
 
 void configureSerial();
 void sendData();
