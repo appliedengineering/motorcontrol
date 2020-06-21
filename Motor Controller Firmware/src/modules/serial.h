@@ -31,9 +31,10 @@ struct telemetryData {
   // Firmware info
   char version[12];
   int psuMode;
-  // Input readings
+  // Input and PWM readings
   int throttlePercent;
   int dutyPercent;
+  int pwmFrequency;
   // Sense readings
   float sourceVoltage;
   float pwmCurrent;

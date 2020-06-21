@@ -21,7 +21,7 @@
 
 telemetryData boatData;
 
-// Send telemetry every half second.
+// Send telemetry at 10 Hz.
 NonBlockingTask telemetryUpdate(100);
 
 unsigned int dataLength;
@@ -41,6 +41,7 @@ void configureSerial() {
 void sendData() {
   boatData.throttlePercent = targetDuty;
   boatData.dutyPercent = duty;
+  boatData.pwmFrequency = F_CPU / (cpuPrescaler * pwmResolution);
   boatData.sourceVoltage = voltage * (44.8/1024);
   boatData.pwmCurrent = current / 10.24;
   boatData.mddStatus = mddActive;
