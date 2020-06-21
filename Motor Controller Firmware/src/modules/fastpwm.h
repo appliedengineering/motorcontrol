@@ -22,13 +22,27 @@
 extern int duty;        // (%)
 extern int lastDuty;    // (%)
 
-extern int pwmFreq;     // (Hz)
+struct pwmConfig {
+  int percentMax;
+  int prescale;
+  int resolution;
+  float multiplier;
+};
+
+extern pwmConfig pwmZones[];
+extern int zoneIndex;
+extern int cpuPrescaler;
 extern int pwmResolution;
+extern float dutyMultiplier;
+extern int dutyZone;
+extern int lastDutyZone;
 
 // Set up nonblocking PWM update task.
 #define INTERVAL_UP (RAMP_TIME_UP / pwmResolution)      // (ms)
 #define INTERVAL_DOWN (RAMP_TIME_DOWN / pwmResolution)  // (ms)
 extern NonBlockingTask pwmUpdate;
 
+int pwmCheckZone();
+void pwmSelectZone();
 void setPWM();
 void updateDuty();

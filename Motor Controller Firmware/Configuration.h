@@ -23,7 +23,7 @@
 // @section info
 
 // Version info of this build reported to host (must be YYYY.MM.DD-X format).
-#define STRING_VERSION "2020.06.17-1"
+#define STRING_VERSION "2020.06.20-3"
 
 // @section machine
 
