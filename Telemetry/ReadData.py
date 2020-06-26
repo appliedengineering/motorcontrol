@@ -1,4 +1,5 @@
 import os
+import platform
 import struct
 import time
 from pySerialTransfer import pySerialTransfer as txfer
@@ -10,7 +11,12 @@ if __name__ == '__main__':
     try:
         clear()
 
-        link = txfer.SerialTransfer("/dev/cu.usbmodem14101", 115200)
+        if platform.system() == 'Linux':
+            link = txfer.SerialTransfer('/dev/ttyACM0', 115200)
+        elif platform.system() == 'Darwin':
+            link = txfer.SerialTransfer('/dev/cu.usbmodem14101', 115200)
+        else:
+            link = txfer.SerialTransfer('COM3', 115200)
 
         if link.open():
             time.sleep(0)
@@ -30,7 +36,7 @@ if __name__ == '__main__':
                 rawData = link.rxBuff[:link.bytesRead]
 #                print(rawData)
                 binaryData = bytearray(rawData)
-                telemetryData = struct.unpack("<12shhhhff????", binaryData)
+                telemetryData = struct.unpack('<12shhhhff????', binaryData)
 #                clear()
                 print(telemetryData)
 
