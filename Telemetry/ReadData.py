@@ -24,11 +24,11 @@ if __name__ == '__main__':
             while True:
                 while not link.available():
                     if link.status < 0:
-                        if link.status == CRC_ERROR:
+                        if link.status == txfer.CRC_ERROR:
                             print('ERROR: CRC_ERROR')
-                        elif link.status == PAYLOAD_ERROR:
+                        elif link.status == txfer.PAYLOAD_ERROR:
                             print('ERROR: PAYLOAD_ERROR')
-                        elif link.status == STOP_BYTE_ERROR:
+                        elif link.status == txfer.STOP_BYTE_ERROR:
                             print('ERROR: STOP_BYTE_ERROR')
                         else:
                             print('ERROR: {}'.format(link.status))
