@@ -13,6 +13,8 @@ A brushed DC motor controller based on the BTN8982TA and Arduino Uno
 
 ### About the PCB
 
+![Top](https://i.imgur.com/7LuRjhW.png)
+
 The schematic and layout are completed on Upverter.
 "Dual Drivers" refers to the board design intended for use with two BTN8982TA's in parallel.
 Zip the Gerber files for upload to PCB fabrication services.
