@@ -40,7 +40,7 @@ void readInput() {
       rawDuty = 820;
     }
 
-    // Fixed point math for (ADC - 205) * (100/615).
+    // Integer math for (ADC - 205) * (100/615).
     targetDuty = (rawDuty - 205) * 333 / 2048;
   #elif defined(BUTTON)
     if (digitalReadFast(BUTTON) == HIGH) {

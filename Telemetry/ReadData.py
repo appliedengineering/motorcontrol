@@ -16,7 +16,7 @@ if __name__ == '__main__':
         elif platform.system() == 'Darwin':
             link = txfer.SerialTransfer('/dev/cu.usbmodem14101', 115200)
         else:
-            link = txfer.SerialTransfer('COM3', 115200)
+            link = txfer.SerialTransfer('COM4', 115200)
 
         if link.open():
             time.sleep(0)
@@ -34,10 +34,10 @@ if __name__ == '__main__':
                             print('ERROR: {}'.format(link.status))
 
                 rawData = link.rxBuff[:link.bytesRead]
-#                print(rawData)
+                #print(rawData)
                 binaryData = bytearray(rawData)
                 telemetryData = struct.unpack('<12shhhhff????', binaryData)
-#                clear()
+                #clear()
                 print(telemetryData)
 
     except KeyboardInterrupt:

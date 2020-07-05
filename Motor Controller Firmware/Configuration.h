@@ -75,7 +75,7 @@
 #define OUTPUT_MODE 1
 
 // The motor will ramp up as quickly as possible.
-#define RAMP_TIME_UP 6 * 1000   // (ms)
+#define RAMP_TIME_UP 6 * 1000     // (ms)
 
 // The motor will take longer to ramp down.
 #define RAMP_TIME_DOWN 10 * 1000  // (ms)
