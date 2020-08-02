@@ -43,4 +43,6 @@
 #define IS_2 A1
 #define VBAT A3
 
+#define ONE_WIRE_BUS 2
+
 void configurePins();

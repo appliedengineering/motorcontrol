@@ -17,41 +17,65 @@
 #include "../Configuration.h"
 #include "sense.h"
 
+int deviceCount;
+float tempC[2];
+
 int senseSamples;
+int avgCount = 16;
+unsigned int sumCounter;
+int zeroISenseVADC; // (ADC)
+int iSenseVADC;     // (ADC)
+int voltage;        // (ADC)
 
-// Modified Moving Average
-int movAvgCurrent, movAvgCurrentSum;
-int avgCount = 100;
-int current;  // (ADC)
-int voltage;  // (ADC)
+// Setup a oneWire instance to communicate with any OneWire device
+OneWire oneWire(ONE_WIRE_BUS);
+// Pass oneWire reference to DallasTemperature library
+DallasTemperature tempSensors(&oneWire);
 
-#if defined(MINIMUM_DUTY_DETECTION)
-  int zeroCurrent;  // (ADC)
-#endif
-
+// Sense temperatures every second.
+NonBlockingTask tempUpdate(1000);
 // Sense current every millisecond.
 NonBlockingTask iSenseUpdate(1);
 // Sense voltage every 10 milliseconds.
 NonBlockingTask vSenseUpdate(10);
 
-void preloadISenseMMA() {
-  for (senseSamples = 0; senseSamples < avgCount; senseSamples++) {
-    movAvgCurrentSum += analogReadFast(IS_1);
-  }
-  movAvgCurrent = movAvgCurrentSum / avgCount;
+// Moving average uses last avgCount samples.
+RunningAverage movAvgCurrent(avgCount);
+
+void configureTempSensors() {
+  // Start up the DallasTemperature library
+  tempSensors.begin();
+  // Locate devices on the bus
+  deviceCount = tempSensors.getDeviceCount();
 }
 
-void senseCurrent() {
-  for (senseSamples = 0; senseSamples < avgCount; senseSamples++) {
-    movAvgCurrentSum -= movAvgCurrent;
-    movAvgCurrentSum += analogReadFast(IS_1);
-    movAvgCurrent = movAvgCurrentSum / avgCount;
+void senseTemperatures() {
+  // Send command to all the sensors for temperature conversion
+  tempSensors.requestTemperatures();
+  // Get temperature from each sensor
+  for (senseSamples = 0; senseSamples < deviceCount; senseSamples++) {
+    tempC[senseSamples] = tempSensors.getTempCByIndex(senseSamples);
   }
-  #if defined(MINIMUM_DUTY_DETECTION)
-    current = movAvgCurrent - zeroCurrent;
-  #else
-    current = movAvgCurrent;
-  #endif
+}
+
+// Get offset current, I_IS(offset).
+void senseZeroCurrent() {
+  for (senseSamples = 0; senseSamples < 5; senseSamples++) {
+    zeroISenseVADC += analogRead(IS_1);
+  }
+  zeroISenseVADC /= 5;
+}
+
+// Get sense current, I_IS.
+void senseCurrent() {
+  movAvgCurrent.addValue(analogReadFast(IS_1));
+  sumCounter++;
+  if (sumCounter != 65535) {
+    iSenseVADC = movAvgCurrent.getFastAverage();
+  } else {
+    // Update MA internal sum to prevent accumulating errors.
+    iSenseVADC = movAvgCurrent.getAverage();
+  }
 }
 
 void senseVoltage() {
@@ -60,12 +84,3 @@ void senseVoltage() {
   }
   voltage /= 5;
 }
-
-#if defined(MINIMUM_DUTY_DETECTION)
-  void senseZeroCurrent() {
-    for (senseSamples = 0; senseSamples < 5; senseSamples++) {
-      zeroCurrent += analogReadFast(IS_1);
-    }
-    zeroCurrent /= 5;
-  }
-#endif

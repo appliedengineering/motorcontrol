@@ -17,26 +17,32 @@
 
 #include "inputs.h"
 #include "nonblocking.h"
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <RunningAverage.h>
+
+extern int deviceCount;
+extern float tempC[];
 
 extern int senseSamples;
-
-// Modified Moving Average
-extern int movAvgCurrent, movAvgCurrentSum;
 extern int avgCount;
-extern int current;       // (ADC)
-extern int voltage;       // (ADC)
+extern unsigned int sumCounter;
+extern int zeroISenseVADC;  // (ADC)
+extern int iSenseVADC;      // (ADC)
+extern int voltage;         // (ADC)
 
-#if defined(MINIMUM_DUTY_DETECTION)
-  extern int zeroCurrent; // (ADC)
-#endif
+extern OneWire oneWire;
+extern DallasTemperature tempSensors;
 
+extern NonBlockingTask tempUpdate;
 extern NonBlockingTask iSenseUpdate;
 extern NonBlockingTask vSenseUpdate;
 
-void preloadISenseMMA();
+extern RunningAverage movAvgCurrent;
+
+void configureTempSensors();
+void senseTemperatures();
+
+void senseZeroCurrent();
 void senseCurrent();
 void senseVoltage();
-
-#if defined(MINIMUM_DUTY_DETECTION)
-  void senseZeroCurrent();
-#endif

@@ -15,7 +15,7 @@
 #include "modules/fastpwm.h"
 #include "modules/protections.h"
 #if defined(TELEMETRY)
-  #include "modules/serial.h"
+  #include "modules/telemetry.h"
 #endif
 
 /******************** BEGIN Setup ****************************/
@@ -25,12 +25,10 @@ void setup() {
     configureSerial();
   #endif
 
+  configureTempSensors();
   // Initialize ADC circuitry and discard first dummy sample
   (void)analogRead(IS_1);
-  #if defined(MINIMUM_DUTY_DETECTION)
-    senseZeroCurrent();
-  #endif
-  preloadISenseMMA();
+  senseZeroCurrent();
 }
 /******************** END Setup ******************************/
 
@@ -54,6 +52,11 @@ void loop() {
   if (nonblockingUpdate(pwmUpdate)) {
     updateDuty();
     checkProtections();
+  }
+
+  // Read temperatures without blocking.
+  if (nonblockingUpdate(tempUpdate)) {
+    senseTemperatures();
   }
 
   // Read current without blocking.

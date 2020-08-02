@@ -9,12 +9,11 @@
 #pragma once
 
 /**
- * serial.h
+ * telemetry.h
  * 
  * Enables serial communication features:
  * 
  * - Output telemetry over serial
- * - Enable programming over serial
  * 
  */
 
@@ -25,6 +24,7 @@
 #include "protections.h"
 #include <SerialTransfer.h>
 
+extern const float conversionFactor;
 extern unsigned int dataLength;
 
 struct telemetryData {
@@ -36,6 +36,7 @@ struct telemetryData {
   int dutyPercent;
   int pwmFrequency;
   // Sense readings
+  float tempC;
   float sourceVoltage;
   float pwmCurrent;
   // Protections status

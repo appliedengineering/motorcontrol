@@ -20,7 +20,8 @@ bool mddActive, ocpActive, uvpActive, ovpActive;
 
 void checkProtections() {
   #if defined(MINIMUM_DUTY_DETECTION)
-    if (current < 0) {
+    // Keep load current above 0 amps.
+    if (iSenseVADC < zeroISenseVADC) {
       duty++;
       mddActive = true;
     } else {
@@ -29,7 +30,8 @@ void checkProtections() {
   #endif
 
   #if defined(OVERCURRENT_PROTECTION)
-    if (current > 300) {
+    // Keep load current under 40 amps.
+    if (iSenseVADC > 454) {
       duty -= 2;
       ocpActive = true;
     } else {
