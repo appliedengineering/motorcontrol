@@ -27,9 +27,16 @@ extern float tempC[];
 extern int senseSamples;
 extern int avgCount;
 extern unsigned int sumCounter;
+extern const float conversionFactor;
 extern int zeroISenseVADC;  // (ADC)
 extern int iSenseVADC;      // (ADC)
-extern int voltage;         // (ADC)
+extern float current;       // (A)
+extern int vSenseADC;       // (ADC)
+extern float voltage;       // (V)
+extern float power;         // (W)
+extern float lastPower;     // (W)
+extern float powerA[100];
+extern float mx;
 
 extern OneWire oneWire;
 extern DallasTemperature tempSensors;
@@ -37,6 +44,7 @@ extern DallasTemperature tempSensors;
 extern NonBlockingTask tempUpdate;
 extern NonBlockingTask iSenseUpdate;
 extern NonBlockingTask vSenseUpdate;
+extern NonBlockingTask pSenseUpdate;
 
 extern RunningAverage movAvgCurrent;
 
@@ -46,3 +54,5 @@ void senseTemperatures();
 void senseZeroCurrent();
 void senseCurrent();
 void senseVoltage();
+void sensePower();
+void trackMPPT();

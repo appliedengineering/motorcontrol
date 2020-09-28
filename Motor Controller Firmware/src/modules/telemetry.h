@@ -24,7 +24,6 @@
 #include "protections.h"
 #include <SerialTransfer.h>
 
-extern const float conversionFactor;
 extern unsigned int dataLength;
 
 struct telemetryData {

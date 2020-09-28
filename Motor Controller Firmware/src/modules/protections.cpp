@@ -39,6 +39,7 @@ void checkProtections() {
     }
   #endif
 
+  // Deprecated: to be replaced by MPPT.
   #if defined(UNDERVOLTAGE_PREVENTION)
     // Keep input voltage above 30.6 volts (30.6 * 1024/44.8 = 700).
     // Gets more power out on solar.
@@ -53,7 +54,7 @@ void checkProtections() {
   #if defined(OVERVOLTAGE_PREVENTION)
     // Keep input voltage below 37 volts (37 * 1024/44.8 = 845).
     // Protects against regen on solar.
-    if (voltage > 845) {
+    if (vSenseADC > 845) {
       duty += 2;
       ovpActive = true;
     } else {

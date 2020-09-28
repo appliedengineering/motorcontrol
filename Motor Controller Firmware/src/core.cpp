@@ -69,6 +69,11 @@ void loop() {
     senseVoltage();
   }
 
+  // Read power without blocking.
+  if (nonblockingUpdate(pSenseUpdate)) {
+    sensePower();
+  }
+
   // Send telemetry without blocking.
   #if defined(TELEMETRY)
     if (nonblockingUpdate(telemetryUpdate)) {

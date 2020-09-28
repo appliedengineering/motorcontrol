@@ -8,12 +8,11 @@
  */
 
 /**
- * serial.cpp
+ * telemetry.cpp
  * 
  * Enables serial communication features:
  * 
  * - Output telemetry over serial
- * - Enable programming over serial
  * 
  */
 
@@ -23,8 +22,6 @@ telemetryData boatData;
 
 // Send telemetry at 10 Hz.
 NonBlockingTask telemetryUpdate(100);
-
-const float conversionFactor = 5.0/1024/1000;
 
 unsigned int dataLength;
 SerialTransfer dataTransfer;
@@ -45,10 +42,10 @@ void sendData() {
   boatData.dutyPercent = duty;
   boatData.pwmFrequency = F_CPU / (cpuPrescaler * pwmResolution);
   boatData.tempC = tempC[0];
-  boatData.sourceVoltage = voltage * (44.8/1024);
+  boatData.sourceVoltage = voltage;
   // Calculate load current using (I_IS - I_IS(offset)) * dk_ILIS.
   // (https://www.infineon.com/dgdl/Infineon-BTN8982TA-DS-v01_00-EN.pdf?fileId=db3a30433fa9412f013fbe32289b7c17)
-  boatData.pwmCurrent = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
+  boatData.pwmCurrent = current;
   boatData.mddStatus = mddActive;
   boatData.ocpStatus = ocpActive;
   boatData.uvpStatus = uvpActive;
