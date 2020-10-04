@@ -105,6 +105,8 @@ void sensePower() {
 }
 
 void trackMPPT() {
+  dP = power - lastPower;
+  dV = voltage - lastVoltage;
 	if (dP > 0) {
     if (dV < 0) {
       duty += 2;

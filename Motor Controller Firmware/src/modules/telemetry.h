@@ -38,10 +38,11 @@ struct telemetryData {
   float tempC;
   float sourceVoltage;
   float pwmCurrent;
+  float powerChange;
+  float voltageChange;
   // Protections status
   bool mddStatus;
   bool ocpStatus;
-  bool uvpStatus;
   bool ovpStatus;
 };
 

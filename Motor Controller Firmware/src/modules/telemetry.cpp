@@ -46,9 +46,10 @@ void sendData() {
   // Calculate load current using (I_IS - I_IS(offset)) * dk_ILIS.
   // (https://www.infineon.com/dgdl/Infineon-BTN8982TA-DS-v01_00-EN.pdf?fileId=db3a30433fa9412f013fbe32289b7c17)
   boatData.pwmCurrent = current;
+  boatData.powerChange = dP;
+  boatData.voltageChange = dV;
   boatData.mddStatus = mddActive;
   boatData.ocpStatus = ocpActive;
-  boatData.uvpStatus = uvpActive;
   boatData.ovpStatus = ovpActive;
   dataLength = sizeof(boatData);
   dataTransfer.txObj(boatData, dataLength);

@@ -47,7 +47,7 @@ void checkProtections() {
       duty -= 2;
       uvpActive = true;
     } else {
-      uvpActive = false;
+      uvpActive  = false;
     }
   #endif */
 
