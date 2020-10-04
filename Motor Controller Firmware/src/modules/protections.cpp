@@ -39,7 +39,7 @@ void checkProtections() {
     }
   #endif
 
-  // Deprecated: to be replaced by MPPT.
+  /* Deprecated: Use MPPT instead.
   #if defined(UNDERVOLTAGE_PREVENTION)
     // Keep input voltage above 30.6 volts (30.6 * 1024/44.8 = 700).
     // Gets more power out on solar.
@@ -49,7 +49,7 @@ void checkProtections() {
     } else {
       uvpActive = false;
     }
-  #endif
+  #endif */
 
   #if defined(OVERVOLTAGE_PREVENTION)
     // Keep input voltage below 37 volts (37 * 1024/44.8 = 845).

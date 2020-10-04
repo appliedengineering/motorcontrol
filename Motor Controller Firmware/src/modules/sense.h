@@ -15,8 +15,7 @@
  * 
  */
 
-#include "inputs.h"
-#include "nonblocking.h"
+#include "fastpwm.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <RunningAverage.h>
@@ -33,10 +32,11 @@ extern int iSenseVADC;      // (ADC)
 extern float current;       // (A)
 extern int vSenseADC;       // (ADC)
 extern float voltage;       // (V)
+extern float lastVoltage;   // (V)
+extern float dV;            // (V)
 extern float power;         // (W)
-extern float lastPower;     // (W)
-extern float powerA[100];
-extern float mx;
+extern float lastPower;     // (W) 
+extern float dP;            // (W)
 
 extern OneWire oneWire;
 extern DallasTemperature tempSensors;
@@ -45,6 +45,7 @@ extern NonBlockingTask tempUpdate;
 extern NonBlockingTask iSenseUpdate;
 extern NonBlockingTask vSenseUpdate;
 extern NonBlockingTask pSenseUpdate;
+extern NonBlockingTask mpptUpdate;
 
 extern RunningAverage movAvgCurrent;
 

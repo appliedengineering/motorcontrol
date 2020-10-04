@@ -43,7 +43,7 @@
  * -- Power supply voltage must NOT exceed 40V! --
  * 
  */
-#define POWER_SUPPLY 1
+#define POWER_SUPPLY 2
 
 //===========================================================================
 //============================= Input Options ===============================
@@ -93,6 +93,7 @@
 // Enable these features when running on solar.
 #if POWER_SUPPLY == 2
   #define OVERVOLTAGE_PREVENTION
-  #define UNDERVOLTAGE_PREVENTION
-  //#define MAX_POWER_POINT_TRACKING
+  /* Deprecated: Use MPPT instead.
+  #define UNDERVOLTAGE_PREVENTION */
+  #define MAX_POWER_POINT_TRACKING
 #endif
