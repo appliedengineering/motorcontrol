@@ -93,6 +93,7 @@ void senseCurrent() {
 }
 
 void senseVoltage() {
+  lastVoltage = voltage;
   for (senseSamples = 0; senseSamples < 5; senseSamples++) {
     vSenseADC += analogReadFast(VBAT);
   }
@@ -101,6 +102,7 @@ void senseVoltage() {
 }
 
 void sensePower() {
+  lastPower = power;
   power = voltage * current;
 }
 
