@@ -122,4 +122,9 @@ void trackMPPT() {
   if (throttleDuty>=90) {
     duty = mpptDuty;	  
   }
+  if (mpptDuty>100) {
+    mpptDuty=100;
+  } else if (mpptDuty<0) {
+    mpptDuty=0;
+  }
 }
