@@ -21,6 +21,8 @@
 
 extern int duty;        // (%)
 extern int lastDuty;    // (%)
+extern int throttleDuty; // %
+extern int lastThrottleDuty; // %
 
 struct pwmConfig {
   int percentMax;
