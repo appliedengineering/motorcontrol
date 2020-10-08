@@ -118,7 +118,7 @@ void updateDuty() {
       targetReached = true;
     }
   }
-  if (duty<90) {
+  if (throttleDuty<90) {
     duty = throttleDuty;
   }
 }
