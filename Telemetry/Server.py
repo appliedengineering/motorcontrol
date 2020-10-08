@@ -15,10 +15,7 @@ else:
     exit(1)
 
 # Creates a UDP socket
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# Binds the socket to the port
-server_address = (ip, port)
-s.bind(server_address)
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
 print("Do Ctrl+C to exit the program.")
 
 def clear():
@@ -59,7 +56,7 @@ if __name__ == '__main__':
                 # data, address = s.recvfrom(4096)                                      # receives the data from client
                 # print("\n\n 2. Server received: ", data.decode('utf-8'), "\n\n")      # prints the data received (not sure if you want it printed or how you want it displayed, feel free to edit)
                 send_data = binaryData                                                  # receives input and stores in send_data var
-                s.sendto(send_data, server_address)                                     # sends the data to client
+                s.sendto(send_data, (ip, port))                                     # sends the data to client
                 # print("\n\n 1. Server sent ", len(send_data),"\n\n")                  # prints the data that was sent
 
     except KeyboardInterrupt:
