@@ -18,6 +18,8 @@
 
 int duty = 0;     // (%)
 int lastDuty = 0; // (%)
+int throttleDuty = 0; // %
+int lastThrottleDuty = 0; // %
 
 // Configure PWM Zones.
 // pwmConfig pwmZones = {percentMax, prescale, resolution, multiplier};
@@ -107,13 +109,16 @@ void setPWM() {
 void updateDuty() {
   if (!targetReached) {
     if (duty < targetDuty) {
-      duty++;
+      throttleDuty++;
       pwmUpdate.executionInterval = INTERVAL_UP;
     } else if (duty > targetDuty) {
-      duty--;
+      throttleDuty--;
       pwmUpdate.executionInterval = INTERVAL_DOWN;
     } else {
       targetReached = true;
     }
+  }
+  if (duty<90) {
+    duty = throttleDuty;
   }
 }
