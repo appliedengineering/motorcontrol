@@ -34,6 +34,7 @@ float dV = 0;           // (V)
 float power;            // (W)
 float lastPower = 0;    // (W)
 float dP = 0;           // (W)
+int it = 1;
 
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
@@ -48,8 +49,8 @@ NonBlockingTask iSenseUpdate(1);
 NonBlockingTask vSenseUpdate(10);
 // Sense power every 10 milliseconds.
 NonBlockingTask pSenseUpdate(10);
-// Track MPPT every 100 milliseconds.
-NonBlockingTask mpptUpdate(100);
+// Track MPPT every 50 milliseconds.
+NonBlockingTask mpptUpdate(50);
 
 // Moving average uses last avgCount samples.
 RunningAverage movAvgCurrent(avgCount);
@@ -103,23 +104,16 @@ void senseVoltage() {
 
 void sensePower() {
   lastPower = power;
-  power = voltage * current;
+  power = voltage * current * duty;
 }
 
 void trackMPPT() {
-  dP = power - lastPower;
+  dD = duty - lastDuty;
   dV = voltage - lastVoltage;
 	if (dP > 0) {
-    if (dV < 0) {
-      duty += 2;
-    } else {
-      duty -= 2;
-    }
-  } else if (dP < 0) {
-    if (dV < 0) {
-      duty -= 2;
-    } else {
-      duty += 2;
-    }
+    duty+=it // keep changing duty in the same direction we were before
+  } else {
+    it*=-1; // power is decreasing
+    duty+=it;
   }
 }
