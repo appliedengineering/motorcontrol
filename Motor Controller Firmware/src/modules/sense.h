@@ -38,6 +38,8 @@ extern float power;         // (W)
 extern float lastPower;     // (W) 
 extern float dP;            // (W)
 extern int it;              // increment or decrement of duty
+extern int mpptDuty;        // a %
+extern int lastDuty;        // also a %
 
 extern OneWire oneWire;
 extern DallasTemperature tempSensors;

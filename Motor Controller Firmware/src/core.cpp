@@ -49,11 +49,9 @@ void loop() {
   readInput();
 
   // Update duty pwithout blocking.
-  if (duty<90){
-    if (nonblockingUpdate(pwmUpdate)) {
-      updateDuty();
-      checkProtections();
-    }
+  if (nonblockingUpdate(pwmUpdate)) {
+    updateDuty();
+    checkProtections();
   }
   // Read temperatures without blocking.
   if (nonblockingUpdate(tempUpdate)) {
@@ -77,10 +75,8 @@ void loop() {
 
   // Track MPPT without blocking.
   #if defined(MAX_POWER_POINT_TRACKING)
-    if (duty>=90) {
-      if (nonblockingUpdate(mpptUpdate)) {
-        trackMPPT();
-      }
+    if (nonblockingUpdate(mpptUpdate)) {
+      trackMPPT();
     }
   #endif
   // Send telemetry without blocking.

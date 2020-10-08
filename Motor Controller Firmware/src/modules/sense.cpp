@@ -35,6 +35,8 @@ float power;            // (W)
 float lastPower = 0;    // (W)
 float dP = 0;           // (W)
 int it = 1;
+int mpptDuty = duty;
+int lastMPPTduty;
 
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
@@ -104,16 +106,20 @@ void senseVoltage() {
 
 void sensePower() {
   lastPower = power;
+  lastMPPTduty = mpptDuty;
   power = voltage * current * duty;
 }
 
 void trackMPPT() {
-  dD = duty - lastDuty;
+  dD = mpptDuty - lastMPPTDuty;
   dV = voltage - lastVoltage;
 	if (dP > 0) {
-    duty+=it // keep changing duty in the same direction we were before
+    mpptDuty+=it // keep changing duty in the same direction we were before
   } else {
     it*=-1; // power is decreasing
-    duty+=it;
+    mpptDuty+=it;
+  }
+  if (throttleDuty>=90) {
+    duty = mpptDuty;	  
   }
 }
