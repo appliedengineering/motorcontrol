@@ -21,7 +21,7 @@ else:
 
 MCAST_GRP = ip
 MCAST_PORT = port
-IS_ALL_GROUPS = True
+IS_ALL_GROUPS = False
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -31,22 +31,28 @@ if IS_ALL_GROUPS:
 else:
     # on this port, listen ONLY to MCAST_GRP
     sock.bind((MCAST_GRP, MCAST_PORT))
+
 mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+                
+if __name__ == "__main__":
+    try:
+        # Let's send data through UDP protocol
+        while True:
+            # send_data = input("Type some text to send =>")
+            # s.sendto(send_data.encode('utf-8'), (ip, port))
+            # print("\n\n 1. Client Sent : ", send_data, "\n\n")
+            # print("recieve")
+            binaryData, address = sock.recvfrom(43)
+            # print(binaryData.decode('utf-8'))
+            telemetryData = struct.unpack('<12shhhhfffff???', binaryData)
+            print(telemetryData)
 
-sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
-                mreq)  # Let's send data through UDP protocol
+    except KeyboardInterrupt:
+        # close the socket
+        sock.close()
 
-while True:
-    # send_data = input("Type some text to send =>")
-    # s.sendto(send_data.encode('utf-8'), (ip, port))
-    # print("\n\n 1. Client Sent : ", send_data, "\n\n")
-    # print("recieve")
-    # binaryData, address = s.recvfrom(64)
-    # print(binaryData.decode('utf-8'))
-    # telemetryData = struct.unpack('<12shhhhfffff???', binaryData)
-    # print(telemetryData)
-    print("data found")
-    print(sock.recv(10240))
-
-# close the socket
-s.close()
+    except:
+        import traceback
+        traceback.print_exc()
+        sock.close()
