@@ -33,9 +33,8 @@ else:
     sock.bind((MCAST_GRP, MCAST_PORT))
 mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
 
-sock.setsockopt(
-    socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq
-)  # Let's send data through UDP protocol
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
+                mreq)  # Let's send data through UDP protocol
 
 while True:
     # send_data = input("Type some text to send =>")

@@ -63,12 +63,10 @@ if __name__ == "__main__":
 
                 MULTICAST_TTL = 2
 
-                sock = socket.socket(
-                    socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP
-                )
-                sock.setsockopt(
-                    socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, MULTICAST_TTL
-                )
+                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,
+                                     socket.IPPROTO_UDP)
+                sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL,
+                                MULTICAST_TTL)
 
                 sock.sendto(b"test string", (ip, port))
                 # send_data = "TESTSTRING"
