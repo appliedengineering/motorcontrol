@@ -1,3 +1,6 @@
+### Visual Studio ###
+.vs
+
 ### Python Virtualenv ###
 .env
 
