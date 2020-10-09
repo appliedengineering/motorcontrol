@@ -112,7 +112,7 @@ void sensePower() {
 
 void trackMPPT() {
   dD = mpptDuty - lastMPPTDuty;
-  dV = voltage - lastVoltage;
+  dP = power - lastPower;
 	if (dP > 0) {
     mpptDuty+=it // keep changing duty in the same direction we were before
   } else {
@@ -121,5 +121,10 @@ void trackMPPT() {
   }
   if (throttleDuty>=90) {
     duty = mpptDuty;	  
+  }
+  if (mpptDuty>100) {
+    mpptDuty=100;
+  } else if (mpptDuty<0) {
+    mpptDuty=0;
   }
 }
