@@ -14,7 +14,7 @@ else:
 #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # Bind the socket to the port
 #server_address = (ip, port)
-#s.bind(server_address)
+# s.bind(server_address)
 #print("Do Ctrl+c to exit the program !!")
 
 MCAST_GRP = ip
@@ -31,17 +31,18 @@ else:
     sock.bind((MCAST_GRP, MCAST_PORT))
 mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
 
-sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)# Let's send data through UDP protocol
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
+                mreq)  # Let's send data through UDP protocol
 
 while True:
     # send_data = input("Type some text to send =>")
     # s.sendto(send_data.encode('utf-8'), (ip, port))
     # print("\n\n 1. Client Sent : ", send_data, "\n\n")
-    #print("recieve")
+    # print("recieve")
     #binaryData, address = s.recvfrom(64)
-    #print(binaryData.decode('utf-8'))
+    # print(binaryData.decode('utf-8'))
     #telemetryData = struct.unpack('<12shhhhfffff???', binaryData)
-    #print(telemetryData)
+    # print(telemetryData)
     print("data found")
     print(sock.recv(10240))
 
