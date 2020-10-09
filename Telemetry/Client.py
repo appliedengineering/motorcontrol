@@ -1,6 +1,6 @@
 import socket
-import sys
 import struct
+import sys
 
 if len(sys.argv) == 3:
     # Get "IP address of Server" and also the "port number" from argument 1 and argument 2

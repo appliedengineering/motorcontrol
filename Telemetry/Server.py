@@ -4,6 +4,7 @@ import socket
 import struct
 import sys
 import time
+
 from pySerialTransfer import pySerialTransfer as txfer
 
 if len(sys.argv) == 3:
