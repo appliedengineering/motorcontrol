@@ -37,6 +37,7 @@ float dP = 0;           // (W)
 int it = 1;
 int mpptDuty = duty;
 int lastMPPTduty;
+int dD;
 
 
 // Setup a oneWire instance to communicate with any OneWire device
@@ -115,12 +116,12 @@ void trackMPPT() {
   dD = mpptDuty - lastMPPTDuty;
   dP = power - lastPower;
 	if (dP > 0) {
-    mpptDuty+=it // keep changing duty in the same direction we were before
+    mpptDuty+=it; // keep changing duty in the same direction we were before
   } else {
     it*=-1; // power is decreasing
     mpptDuty+=it;
   }
-  if (throttleDuty>=90 && POWER_SUPPLY==2) {
+  if (throttleDuty>=60 && POWER_SUPPLY==2) {
     duty = mpptDuty;	  
   }
   if (mpptDuty>100) {
