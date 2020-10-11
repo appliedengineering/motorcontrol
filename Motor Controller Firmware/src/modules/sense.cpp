@@ -38,6 +38,7 @@ int it = 1;
 int mpptDuty = duty;
 int lastMPPTduty;
 
+
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
 // Pass oneWire reference to DallasTemperature library
@@ -119,7 +120,7 @@ void trackMPPT() {
     it*=-1; // power is decreasing
     mpptDuty+=it;
   }
-  if (throttleDuty>=90) {
+  if (throttleDuty>=90 && POWER_SUPPLY==2) {
     duty = mpptDuty;	  
   }
   if (mpptDuty>100) {

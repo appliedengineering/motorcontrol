@@ -18,6 +18,7 @@
 #include "inputs.h"
 #include "nonblocking.h"
 #include "sense.h"
+#include "../Configuration.h"
 
 extern int duty;        // (%)
 extern int lastDuty;    // (%)

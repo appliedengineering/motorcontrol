@@ -118,7 +118,7 @@ void updateDuty() {
       targetReached = true;
     }
   }
-  if (throttleDuty<90) {
+  if ((throttleDuty<90 && POWER_SUPPLY==2) || (POWER_SUPPLY==1)) {
     duty = throttleDuty;
-  }
+  } 
 }

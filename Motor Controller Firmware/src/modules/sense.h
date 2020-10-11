@@ -19,6 +19,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <RunningAverage.h>
+#include "../Configuration.h"
 
 extern int deviceCount;
 extern float tempC[];
