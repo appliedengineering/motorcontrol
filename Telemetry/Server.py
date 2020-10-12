@@ -48,22 +48,24 @@ if __name__ == "__main__":
                         else:
                             print('ERROR: {}'.format(link.status))
 
-                rawData = link.rxBuff[:link.bytesRead]
-                # print(rawData)
-                binaryData = bytearray(rawData)
-                # telemetryData = struct.unpack('<12shhhhfffff???', binaryData)
+                binaryData = bytearray(link.rxBuff[:link.bytesRead])
+
+                # Uncomment below to deserialize (read) and print the data.
+                # telemetryData = Readings.Readings.GetRootAsReadings(binaryData, 0)
                 # print(telemetryData)
 
-                # UDP MULTICAST BINARY DATA
+                ### UDP MULTICAST BINARY DATA ###
+
+                # Uncomment below to enable listening for remote commands.
                 # print("####### Server is listening #######")
                 # data, address = s.recvfrom(4096)                                  # receives the data from client
-                # print("\n\n 2. Server received: ", data.decode('utf-8'), "\n\n")  # prints the data received (not sure if you want it printed or how you want it displayed, feel free to edit)
-
+                # print("\n\n 2. Server received: ", data.decode('utf-8'), "\n\n")  # prints the data received
+                
                 MULTICAST_TTL = 2
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, MULTICAST_TTL)
-                sock.sendto(binaryData, (ip, port))                                 # sends the data to client
-                # print("\n\n 1. Server sent ", len(send_data),"\n\n")              # prints the data that was se
+                sock.sendto(binaryData, (ip, port))                     # send the data to client
+                # print("\n\n 1. Server sent ", len(send_data),"\n\n")  # print length of data sent
 
     except KeyboardInterrupt:
         link.close()

@@ -39,8 +39,8 @@ extern float power;         // (W)
 extern float lastPower;     // (W) 
 extern float dP;            // (W)
 extern int it;              // increment or decrement of duty
-extern int mpptDuty;        // a %
-extern int lastDuty;        // also a %
+extern int mpptDuty;        // (%)
+extern int lastDuty;        // (%)
 extern int dD;
 
 extern OneWire oneWire;
@@ -61,4 +61,4 @@ void senseZeroCurrent();
 void senseCurrent();
 void senseVoltage();
 void sensePower();
-void trackMPPT();
+void trackMPP();

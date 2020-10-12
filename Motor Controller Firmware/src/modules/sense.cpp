@@ -53,7 +53,7 @@ NonBlockingTask iSenseUpdate(1);
 NonBlockingTask vSenseUpdate(10);
 // Sense power every 10 milliseconds.
 NonBlockingTask pSenseUpdate(10);
-// Track MPPT every 50 milliseconds.
+// Track MPP every 50 milliseconds.
 NonBlockingTask mpptUpdate(50);
 
 // Moving average uses last avgCount samples.
@@ -112,21 +112,21 @@ void sensePower() {
   power = voltage * current * duty;
 }
 
-void trackMPPT() {
-  dD = mpptDuty - lastMPPTDuty;
+void trackMPP() {
+  dD = mpptDuty - lastMPPTduty;
   dP = power - lastPower;
 	if (dP > 0) {
-    mpptDuty+=it; // keep changing duty in the same direction we were before
+    mpptDuty += it; // keep changing duty in the same direction we were before
   } else {
-    it*=-1; // power is decreasing
-    mpptDuty+=it;
+    it *= -1;       // power is decreasing
+    mpptDuty += it;
   }
-  if (throttleDuty>=60 && POWER_SUPPLY==2) {
-    duty = mpptDuty;	  
+  if (throttleDuty >= 60 && POWER_SUPPLY == 2) {
+    duty = mpptDuty;
   }
-  if (mpptDuty>100) {
-    mpptDuty=100;
-  } else if (mpptDuty<0) {
-    mpptDuty=0;
+  if (mpptDuty > 100) {
+    mpptDuty = 100;
+  } else if (mpptDuty < 0) {
+    mpptDuty = 0;
   }
 }
