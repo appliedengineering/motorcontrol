@@ -48,7 +48,7 @@ void loop() {
 
   readInput();
 
-  // Update duty pwithout blocking.
+  // Update duty without blocking.
   if (nonblockingUpdate(pwmUpdate)) {
     updateDuty();
     checkProtections();
@@ -73,10 +73,10 @@ void loop() {
     sensePower();
   }
 
-  // Track MPPT without blocking.
+  // Track MPP without blocking.
   #if defined(MAX_POWER_POINT_TRACKING)
     if (nonblockingUpdate(mpptUpdate)) {
-      trackMPPT();
+      trackMPP();
     }
   #endif
   // Send telemetry without blocking.
