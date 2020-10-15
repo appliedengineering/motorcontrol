@@ -38,7 +38,8 @@ void configureSerial() {
 }
 
 void sendData() {
-  boatData.throttlePercent = targetDuty;
+  boatData.throttleDutyPercent = throttleDuty;
+  boatData.mpptDutyPercent = mpptDuty;
   boatData.dutyPercent = duty;
   boatData.pwmFrequency = F_CPU / (cpuPrescaler * pwmResolution);
   boatData.tempC = tempC[0];
@@ -47,7 +48,7 @@ void sendData() {
   // (https://www.infineon.com/dgdl/Infineon-BTN8982TA-DS-v01_00-EN.pdf?fileId=db3a30433fa9412f013fbe32289b7c17)
   boatData.pwmCurrent = current;
   boatData.powerChange = dP;
-  boatData.voltageChange = dV;
+  boatData.powerDrawn = power;
   boatData.mddStatus = mddActive;
   boatData.ocpStatus = ocpActive;
   boatData.ovpStatus = ovpActive;
