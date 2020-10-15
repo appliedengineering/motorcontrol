@@ -1,15 +1,11 @@
 import platform
 import struct
 import time
-import zmq
 
 from pySerialTransfer import pySerialTransfer as txfer
 
 # ZeroMQ Context
-context = zmq.Context()
 # Define the socket using the "Context"
-sock = context.socket(zmq.PUB)
-sock.bind("epgm://224.0.0.1:28650")
 
 if __name__ == "__main__":
     try:
@@ -18,7 +14,7 @@ if __name__ == "__main__":
         elif platform.system() == "Darwin":
             link = txfer.SerialTransfer("/dev/tty.usbmodem14B01", 115200, False)
         else:
-            link = txfer.SerialTransfer("COM1", 115200)
+            link = txfer.SerialTransfer("COM9", 115200)
 
         if link.open():
             time.sleep(0)
@@ -41,8 +37,7 @@ if __name__ == "__main__":
                 telemetryData = struct.unpack('<12shhhhfffff???', binaryData)
                 print(telemetryData)
 
-                ### EPGM MULTICAST BINARY DATA ###
-                sock.send(binaryData)                                   # send the data to client
+                ### EPGM MULTICAST BINARY DATA ###                                 # send the data to client
                 # print("\n\n 1. Server sent ", len(send_data),"\n\n")  # print length of data sent
 
     except KeyboardInterrupt:

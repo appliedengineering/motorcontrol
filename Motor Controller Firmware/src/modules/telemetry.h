@@ -31,7 +31,8 @@ struct telemetryData {
   char version[12];
   int psuMode;
   // Input and PWM readings
-  int throttlePercent;
+  int throttleDutyPercent;
+  int mpptDutyPercent;
   int dutyPercent;
   int pwmFrequency;
   // Sense readings
@@ -39,7 +40,7 @@ struct telemetryData {
   float sourceVoltage;
   float pwmCurrent;
   float powerChange;
-  float voltageChange;
+  float powerDrawn;
   // Protections status
   bool mddStatus;
   bool ocpStatus;

@@ -31,7 +31,7 @@ if __name__ == "__main__":
         elif platform.system() == "Darwin":
             link = txfer.SerialTransfer("/dev/cu.usbmodem14101", 115200, False)
         else:
-            link = txfer.SerialTransfer("COM1", 115200)
+            link = txfer.SerialTransfer("COM9", 115200)
 
         if link.open():
             time.sleep(0)
