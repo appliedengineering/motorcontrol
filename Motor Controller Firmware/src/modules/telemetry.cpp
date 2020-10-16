@@ -25,7 +25,7 @@ NonBlockingTask telemetryUpdate(100);
 
 unsigned int dataLength;
 SerialTransfer dataTransfer;
-
+ 
 void configureSerial() {
   Serial.begin(TELEMETRY);
   dataTransfer.begin(Serial);
