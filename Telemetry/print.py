@@ -1,4 +1,4 @@
-# Telemetry ZeroMQ Publisher
+# Print Telemetry to Console
 # Copyright (c) 2020 Applied Engineering
 
 import concurrent.futures
@@ -8,19 +8,12 @@ import platform
 import queue
 import serial
 import threading
-import zmq
 
 # Set logging verbosity.
 # CRITICAL will not log anything.
 # ERROR will only log exceptions.
 # INFO will log more information.
 log_level = logging.INFO
-
-# ZeroMQ Context.
-context = zmq.Context()
-# Define the socket using the Context.
-sock = context.socket(zmq.PUB)
-sock.bind('epgm://224.0.0.1:28650')
 
 def readFromArduino(queue, exit_event):
     '''Read data from serial.'''
@@ -42,22 +35,21 @@ def readFromArduino(queue, exit_event):
         
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
-
+    
     logging.info('Producer received event. Exiting now.')
     link.close()
 
-def sendZmqMulticast(queue, exit_event):
-    '''Multicast data with ZeroMQ.'''
+def printToConsole(queue, exit_event):
+    '''Print data to console.'''
     while not exit_event.is_set() or not queue.empty():
         try:
-            sock.send(queue.get())
-            logging.info('Consumer sending data. Queue size is %d.', queue.qsize())
+            print(msgpack.unpackb(queue.get(), use_list=False, raw=False))
+            logging.info('Consumer printed data. Queue size is %d.', queue.qsize())
 
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
     
     logging.info('Consumer received event. Exiting now.')
-    sock.close()
 
 if __name__ == '__main__':
     try:
@@ -67,7 +59,7 @@ if __name__ == '__main__':
         exit_event = threading.Event()
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             executor.submit(readFromArduino, pipeline, exit_event)
-            executor.submit(sendZmqMulticast, pipeline, exit_event)
+            executor.submit(printToConsole, pipeline, exit_event)
     
     except KeyboardInterrupt:
         logging.info('Setting exit event.')

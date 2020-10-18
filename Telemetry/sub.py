@@ -1,32 +1,34 @@
-import struct
+# Telemetry ZeroMQ Subscriber
+# Copyright (c) 2020 Applied Engineering
+
+import logging
+import msgpack
 import zmq
 
-# ZeroMQ Context
-context = zmq.Context()
-# Define the socket using the "Context"
-sock = context.socket(zmq.SUB)
-# Define subscription and messages with prefix to accept.
-sock.setsockopt(zmq.SUBSCRIBE, b"")
-sock.connect("epgm://224.0.0.1:28650")
+# Set logging verbosity.
+# CRITICAL will not log anything.
+# ERROR will only log exceptions.
+# INFO will log more information.
+log_level = logging.INFO
 
-if __name__ == "__main__":
+# ZeroMQ Context.
+context = zmq.Context()
+# Define the socket using the Context.
+sock = context.socket(zmq.SUB)
+# Define subscription.
+sock.setsockopt(zmq.SUBSCRIBE, b'')
+sock.connect('epgm://224.0.0.1:28650')
+
+if __name__ == '__main__':
     try:
-        # Let's send data through UDP protocol
+        logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
+        
         while True:
-            # send_data = input("Type some text to send =>")
-            # s.sendto(send_data.encode('utf-8'), (ip, port))
-            # print("\n\n 1. Client Sent : ", send_data, "\n\n")
-            # print("recieve")
-            binaryData = sock.recv()
-            # print(binaryData.decode('utf-8'))
-            telemetryData = struct.unpack('<12shhhhfffff???', binaryData)
-            print(telemetryData)
+            print(msgpack.unpackb(sock.recv(), use_list=False, raw=False))
 
     except KeyboardInterrupt:
-        # close the socket
+        logging.info('Exiting now.')
         sock.close()
 
-    except:
-        import traceback
-        traceback.print_exc()
-        sock.close()
+    except Exception as e:
+        logging.error('A %s error occurred.', e.__class__)

@@ -18,40 +18,32 @@
 
 #include "telemetry.h"
 
-telemetryData boatData;
+StaticJsonDocument<128> boatData;
 
 // Send telemetry at 10 Hz.
 NonBlockingTask telemetryUpdate(100);
 
-unsigned int dataLength;
-SerialTransfer dataTransfer;
-
 void configureSerial() {
   Serial.begin(TELEMETRY);
-  dataTransfer.begin(Serial);
-  strlcpy(boatData.version, STRING_VERSION, 13);
-  boatData.psuMode = POWER_SUPPLY;
-  Serial.println("Motor Controller Firmware");
-  Serial.println("Copyright (c) 2020 Applied Engineering");
-  Serial.print("Booted version ");
-  Serial.println(STRING_VERSION);
+  boatData["version"] = STRING_VERSION;
+  boatData["psuMode"] = POWER_SUPPLY;
 }
 
 void sendData() {
-  boatData.throttlePercent = targetDuty;
-  boatData.dutyPercent = duty;
-  boatData.pwmFrequency = F_CPU / (cpuPrescaler * pwmResolution);
-  boatData.tempC = tempC[0];
-  boatData.sourceVoltage = voltage;
+  boatData["throttlePercent"] = targetDuty;
+  boatData["dutyPercent"] = duty;
+  boatData["pwmFrequency"] = F_CPU / (cpuPrescaler * pwmResolution);
+  boatData["tempC"] = tempC[0];
+  boatData["sourceVoltage"] = voltage;
   // Calculate load current using (I_IS - I_IS(offset)) * dk_ILIS.
   // (https://www.infineon.com/dgdl/Infineon-BTN8982TA-DS-v01_00-EN.pdf?fileId=db3a30433fa9412f013fbe32289b7c17)
-  boatData.pwmCurrent = current;
-  boatData.powerChange = dP;
-  boatData.voltageChange = dV;
-  boatData.mddStatus = mddActive;
-  boatData.ocpStatus = ocpActive;
-  boatData.ovpStatus = ovpActive;
-  dataLength = sizeof(boatData);
-  dataTransfer.txObj(boatData, dataLength);
-  dataTransfer.sendData(dataLength);
+  boatData["pwmCurrent"] = current;
+  boatData["powerChange"] = dP;
+  boatData["voltageChange"] = dV;
+  boatData["mddStatus"] = mddActive;
+  boatData["ocpStatus"] = ocpActive;
+  boatData["ovpStatus"] = ovpActive;
+  serializeMsgPack(boatData, Serial);
+  // Send message end sequence.
+  Serial.print("\n\n");
 }

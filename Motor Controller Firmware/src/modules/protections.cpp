@@ -16,7 +16,7 @@
 
 #include "protections.h"
 
-bool mddActive, ocpActive, uvpActive, ovpActive;
+bool mddActive, ocpActive, ovpActive;
 
 void checkProtections() {
   #if defined(MINIMUM_DUTY_DETECTION)
@@ -38,18 +38,6 @@ void checkProtections() {
       ocpActive = false;
     }
   #endif
-
-  /* Deprecated: Use MPPT instead.
-  #if defined(UNDERVOLTAGE_PREVENTION)
-    // Keep input voltage above 30.6 volts (30.6 * 1024/44.8 = 700).
-    // Gets more power out on solar.
-    if (voltage < 700) {
-      duty -= 2;
-      uvpActive = true;
-    } else {
-      uvpActive  = false;
-    }
-  #endif */
 
   #if defined(OVERVOLTAGE_PREVENTION)
     // Keep input voltage below 37 volts (37 * 1024/44.8 = 845).
