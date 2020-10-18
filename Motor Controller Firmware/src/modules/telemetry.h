@@ -31,6 +31,7 @@ struct telemetryData {
   char version[12];
   int psuMode;
   // Input and PWM readings
+  int theTargetDuty;
   int throttleDutyPercent;
   int mpptDutyPercent;
   int dutyPercent;
