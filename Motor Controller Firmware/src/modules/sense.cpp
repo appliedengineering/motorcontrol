@@ -1,17 +1,17 @@
 /**
  * Motor Controller Firmware
  * Copyright (c) 2020 Applied Engineering
- * 
+ *
  * Based on software from various contributors.
  * Copyright (c) 2020 Andrew Berkun / Alex Liu / William Zhou
- * 
+ *
  */
 
 /**
  * sense.cpp
- * 
+ *
  * Detects electrical operating conditions.
- * 
+ *
  */
 
 #include "../Configuration.h"
@@ -61,91 +61,91 @@ NonBlockingTask mpptUpdate(50);
 RunningAverage movAvgCurrent(avgCount);
 
 void configureTempSensors() {
-  // Start up the DallasTemperature library
-  tempSensors.begin();
-  // Locate devices on the bus
-  deviceCount = tempSensors.getDeviceCount();
+    // Start up the DallasTemperature library
+    tempSensors.begin();
+    // Locate devices on the bus
+    deviceCount = tempSensors.getDeviceCount();
 }
 
 void senseTemperatures() {
-  // Send command to all the sensors for temperature conversion
-  tempSensors.requestTemperatures();
-  // Get temperature from each sensor
-  for (senseSamples = 0; senseSamples < deviceCount; senseSamples++) {
-    tempC[senseSamples] = tempSensors.getTempCByIndex(senseSamples);
-  }
+    // Send command to all the sensors for temperature conversion
+    tempSensors.requestTemperatures();
+    // Get temperature from each sensor
+    for (senseSamples = 0; senseSamples < deviceCount; senseSamples++) {
+        tempC[senseSamples] = tempSensors.getTempCByIndex(senseSamples);
+    }
 }
 
 // Get offset current, I_IS(offset).
 void senseZeroCurrent() {
-  for (senseSamples = 0; senseSamples < 5; senseSamples++) {
-   
-   zeroISenseVADC += analogRead(IS_1);
-  }
-  zeroISenseVADC /= 5;
+    for (senseSamples = 0; senseSamples < 5; senseSamples++) {
+
+        zeroISenseVADC += analogRead(IS_1);
+    }
+    zeroISenseVADC /= 5;
 }
 
 // Get sense current, I_IS.
 void senseCurrent() {
-  movAvgCurrent.addValue(analogReadFast(IS_1));
-  sumCounter++;
-  if (sumCounter != 65535) { 
-    iSenseVADC = movAvgCurrent.getFastAverage();
-  } else {
-    // Update MA internal sum to prevent accumulating errors.
-    iSenseVADC = movAvgCurrent.getAverage();
-  }
-  if (powerSupply) {
-    current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
-  } else {
-    current = (duty/100.0)*7.77;
-  }
+    movAvgCurrent.addValue(analogReadFast(IS_1));
+    sumCounter++;
+    if (sumCounter != 65535) {
+        iSenseVADC = movAvgCurrent.getFastAverage();
+    } else {
+        // Update MA internal sum to prevent accumulating errors.
+        iSenseVADC = movAvgCurrent.getAverage();
+    }
+    if (powerSupply) {
+        current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
+    } else {
+        current = (duty/100.0)*7.77;
+    }
 }
 
 void senseVoltage() {
-  lastVoltage = voltage;
-  for (senseSamples = 0; senseSamples < 5; senseSamples++) {
-    vSenseADC += analogReadFast(VBAT);
-  }
-  vSenseADC /= 5;
-  if (powerSupply) { 
-    voltage = vSenseADC * (44.8/1024);
-  } else {
-    voltage = 13.0*log(10-current);
-  }
+    lastVoltage = voltage;
+    for (senseSamples = 0; senseSamples < 5; senseSamples++) {
+        vSenseADC += analogReadFast(VBAT);
+    }
+    vSenseADC /= 5;
+    if (powerSupply) {
+        voltage = vSenseADC * (44.8/1024);
+    } else {
+        voltage = 13.0*log(10-current);
+    }
 }
 
 void sensePower() {
-  if (powerSupply) {
-    power = voltage * current * duty;
-  } else {
-    power = voltage * current;
-  }
-  // in case current is negative
-  if (power<0) {
-    power*=-1;
-  }
+    if (powerSupply) {
+        power = voltage * current * duty;
+    } else {
+        power = voltage * current;
+    }
+    // in case current is negative
+    if (power<0) {
+        power*=-1;
+    }
 }
 
 void trackMPP() {
-  dD = mpptDuty - lastMPPTduty;
-  dP = power - lastPower;
-	if (dP > 0) {
-    mpptDuty += it; // keep changing duty in the same direction we were before
-  } else {
-    it *= -1;       // power is decreasing
-    mpptDuty += it;
-  }
-  if (throttleDuty >= 70 && POWER_SUPPLY == 2) {
-    duty = mpptDuty;
-  } else {
-    mpptDuty = throttleDuty; // ramp up
-  }
-  if (mpptDuty > 100) {
-    mpptDuty = 100;
-  } else if (mpptDuty < 0) {
-    mpptDuty = 0;
-  }
-  lastPower = power;
-  lastMPPTduty = mpptDuty;
+    dD = mpptDuty - lastMPPTduty;
+    dP = power - lastPower;
+    if (dP > 0) {
+        mpptDuty += it; // keep changing duty in the same direction we were before
+    } else {
+        it *= -1;       // power is decreasing
+        mpptDuty += it;
+    }
+    if (throttleDuty >= 70 && POWER_SUPPLY == 2) {
+        duty = mpptDuty;
+    } else {
+        mpptDuty = throttleDuty; // ramp up
+    }
+    if (mpptDuty > 100) {
+        mpptDuty = 100;
+    } else if (mpptDuty < 0) {
+        mpptDuty = 0;
+    }
+    lastPower = power;
+    lastMPPTduty = mpptDuty;
 }

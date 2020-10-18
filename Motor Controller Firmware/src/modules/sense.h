@@ -1,18 +1,18 @@
 /**
  * Motor Controller Firmware
  * Copyright (c) 2020 Applied Engineering
- * 
+ *
  * Based on software from various contributors.
  * Copyright (c) 2020 Andrew Berkun / Alex Liu / William Zhou
- * 
+ *
  */
 #pragma once
 
 /**
  * sense.h
- * 
+ *
  * Detects electrical operating conditions.
- * 
+ *
  */
 
 #include "fastpwm.h"
@@ -36,7 +36,7 @@ extern float voltage;       // (V)
 extern float lastVoltage;   // (V)
 extern float dV;            // (V)
 extern float power;         // (W)
-extern float lastPower;     // (W) 
+extern float lastPower;     // (W)
 extern float dP;            // (W)
 extern int it;              // increment or decrement of duty
 extern int mpptDuty;        // (%)
