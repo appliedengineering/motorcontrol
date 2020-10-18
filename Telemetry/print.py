@@ -1,49 +1,69 @@
+# Print Telemetry to Console
+# Copyright (c) 2020 Applied Engineering
+
+import concurrent.futures
+import logging
+import msgpack
 import platform
-import struct
-import time
+import queue
+import serial
+import threading
 
-from pySerialTransfer import pySerialTransfer as txfer
+# Set logging verbosity.
+# CRITICAL will not log anything.
+# ERROR will only log exceptions.
+# INFO will log more information.
+log_level = logging.INFO
 
-# ZeroMQ Context
-# Define the socket using the "Context"
+def readFromArduino(queue, exit_event):
+    '''Read data from serial.'''
+    
+    # Define message end sequence.
+    end = b'\n\n'
+    
+    while not exit_event.is_set():
+        try:
+            if platform.system() == 'Darwin':
+                link = serial.Serial('/dev/tty.usbmodem14101', 115200)
+            elif platform.system() == 'Linux':
+                link = serial.Serial('/dev/ttyACM0', 115200)
+            else:
+                link = serial.Serial('COM1', 115200)
 
-if __name__ == "__main__":
+            queue.put(link.read_until(end).rstrip(end))
+            logging.info('Producer received data.')
+        
+        except Exception as e:
+            logging.error('A %s error occurred.', e.__class__)
+    
+    logging.info('Producer received event. Exiting now.')
+    link.close()
+
+def printToConsole(queue, exit_event):
+    '''Print data to console.'''
+    while not exit_event.is_set() or not queue.empty():
+        try:
+            print(msgpack.unpackb(queue.get(), use_list=False, raw=False))
+            logging.info('Consumer printed data. Queue size is %d.', queue.qsize())
+
+        except Exception as e:
+            logging.error('A %s error occurred.', e.__class__)
+    
+    logging.info('Consumer received event. Exiting now.')
+
+if __name__ == '__main__':
     try:
-        if platform.system() == "Linux":
-            link = txfer.SerialTransfer("/dev/ttyACM0", 115200)
-        elif platform.system() == "Darwin":
-            link = txfer.SerialTransfer("/dev/tty.usbmodem14B01", 115200, False)
-        else:
-            link = txfer.SerialTransfer("COM9", 115200)
+        logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
 
-        if link.open():
-            time.sleep(0)
-
-            while True:
-                while not link.available():
-                    if link.status < 0:
-                        if link.status == txfer.CRC_ERROR:
-                            print('ERROR: CRC_ERROR')
-                        elif link.status == txfer.PAYLOAD_ERROR:
-                            print('ERROR: PAYLOAD_ERROR')
-                        elif link.status == txfer.STOP_BYTE_ERROR:
-                            print('ERROR: STOP_BYTE_ERROR')
-                        else:
-                            print('ERROR: {}'.format(link.status))
-
-                binaryData = bytearray(link.rxBuff[:link.bytesRead])
-                
-                # Uncomment below to deserialize (read) and print the data.
-                telemetryData = struct.unpack('<12shhhhhhfffff???', binaryData)
-                print(telemetryData)
-
-                ### EPGM MULTICAST BINARY DATA ###                                 # send the data to client
-                # print("\n\n 1. Server sent ", len(send_data),"\n\n")  # print length of data sent
-
+        pipeline = queue.Queue(maxsize=100)
+        exit_event = threading.Event()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            executor.submit(readFromArduino, pipeline, exit_event)
+            executor.submit(printToConsole, pipeline, exit_event)
+    
     except KeyboardInterrupt:
-        link.close()
+        logging.info('Setting exit event.')
+        exit_event.set()
 
-    except:
-        import traceback
-        traceback.print_exc()
-        link.close()
+    except Exception as e:
+        logging.error('A %s error occurred.', e.__class__)
