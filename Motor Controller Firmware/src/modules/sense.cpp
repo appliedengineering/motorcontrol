@@ -1,21 +1,21 @@
 /**
  * Motor Controller Firmware
  * Copyright (c) 2020 Applied Engineering
- * 
+ *
  * Based on software from various contributors.
  * Copyright (c) 2020 Andrew Berkun / Alex Liu / William Zhou
- * 
+ *
  */
 
 /**
  * sense.cpp
- * 
+ *
  * Detects electrical operating conditions.
- * 
+ *
  */
 
-#include "../Configuration.h"
 #include "sense.h"
+#include "../Configuration.h"
 
 int deviceCount;
 float tempC[2];
@@ -23,23 +23,22 @@ float tempC[2];
 int senseSamples;
 int avgCount = 16;
 unsigned int sumCounter;
-const float conversionFactor = 5.0/1024/1000;
-int zeroISenseVADC;     // (ADC)
-int iSenseVADC;         // (ADC)
-float current;          // (A)
-int vSenseADC;          // (ADC)
-float voltage;          // (V)
-float lastVoltage = 0;  // (V)
-float dV = 0;           // (V)
-float power;            // (W)
-float lastPower = 0;    // (W)
-float dP = 0;           // (W)
+const float conversionFactor = 5.0 / 1024 / 1000;
+int zeroISenseVADC;    // (ADC)
+int iSenseVADC;        // (ADC)
+float current;         // (A)
+int vSenseADC;         // (ADC)
+float voltage;         // (V)
+float lastVoltage = 0; // (V)
+float dV = 0;          // (V)
+float power;           // (W)
+float lastPower = 0;   // (W)
+float dP = 0;          // (W)
 int it = 1;
 int mpptDuty = 20;
 int lastMPPTduty = 20;
 int dD;
 bool powerSupply = true;
-
 
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
@@ -79,8 +78,8 @@ void senseTemperatures() {
 // Get offset current, I_IS(offset).
 void senseZeroCurrent() {
   for (senseSamples = 0; senseSamples < 5; senseSamples++) {
-   
-   zeroISenseVADC += analogRead(IS_1);
+
+    zeroISenseVADC += analogRead(IS_1);
   }
   zeroISenseVADC /= 5;
 }
@@ -89,7 +88,7 @@ void senseZeroCurrent() {
 void senseCurrent() {
   movAvgCurrent.addValue(analogReadFast(IS_1));
   sumCounter++;
-  if (sumCounter != 65535) { 
+  if (sumCounter != 65535) {
     iSenseVADC = movAvgCurrent.getFastAverage();
   } else {
     // Update MA internal sum to prevent accumulating errors.
@@ -98,7 +97,7 @@ void senseCurrent() {
   if (powerSupply) {
     current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
   } else {
-    current = (duty/100.0)*7.77;
+    current = (duty / 100.0) * 7.77;
   }
 }
 
@@ -108,10 +107,10 @@ void senseVoltage() {
     vSenseADC += analogReadFast(VBAT);
   }
   vSenseADC /= 5;
-  if (powerSupply) { 
-    voltage = vSenseADC * (44.8/1024);
+  if (powerSupply) {
+    voltage = vSenseADC * (44.8 / 1024);
   } else {
-    voltage = 13.0*log(10-current);
+    voltage = 13.0 * log(10 - current);
   }
 }
 
@@ -122,18 +121,18 @@ void sensePower() {
     power = voltage * current;
   }
   // in case current is negative
-  if (power<0) {
-    power*=-1;
+  if (power < 0) {
+    power *= -1;
   }
 }
 
 void trackMPP() {
   dD = mpptDuty - lastMPPTduty;
   dP = power - lastPower;
-	if (dP > 0) {
+  if (dP > 0) {
     mpptDuty += it; // keep changing duty in the same direction we were before
   } else {
-    it *= -1;       // power is decreasing
+    it *= -1; // power is decreasing
     mpptDuty += it;
   }
   if (throttleDuty >= 70 && POWER_SUPPLY == 2) {
