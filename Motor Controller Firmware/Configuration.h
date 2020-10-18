@@ -93,7 +93,5 @@
 // Enable these features when running on solar.
 #if POWER_SUPPLY == 2
   #define OVERVOLTAGE_PREVENTION
-  /* Deprecated: Use MPPT instead.
-  #define UNDERVOLTAGE_PREVENTION */
   #define MAX_POWER_POINT_TRACKING
 #endif

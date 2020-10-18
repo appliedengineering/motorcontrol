@@ -1,4 +1,6 @@
+msgpack
 pyserial
-pySerialTransfer==2.0.2
 PyYAML
+# You will receive errors because the pyzmq package doesn't support PGM.
+# Compile pyzmq with PGM: https://stackoverflow.com/questions/37177322/how-to-install-pyzmq-with-pgm
 pyzmq
