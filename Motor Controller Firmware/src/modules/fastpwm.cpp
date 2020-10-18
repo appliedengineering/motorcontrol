@@ -124,7 +124,7 @@ void updateDuty() {
   } else if (throttleDuty<=0) {
     targetDuty = 100;
   }
-  if ((throttleDuty<10 && POWER_SUPPLY==2) || (POWER_SUPPLY==1)) {
+  if ((throttleDuty<70 && POWER_SUPPLY==2) || (POWER_SUPPLY==1)) {
     duty = throttleDuty;
   } 
 }
