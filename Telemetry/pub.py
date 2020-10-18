@@ -34,8 +34,8 @@ if __name__ == "__main__":
                 binaryData = bytearray(link.rxBuff[:link.bytesRead])
                 
                 # Uncomment below to deserialize (read) and print the data.
-                # telemetryData = struct.unpack('<12shhhhfffff???', binaryData)
-                # print(telemetryData)
+                telemetryData = struct.unpack('<12shhhhhhfffff???', binaryData)
+                print(telemetryData)
 
                 ### EPGM MULTICAST BINARY DATA ###                                 # send the data to client
                 # print("\n\n 1. Server sent ", len(send_data),"\n\n")  # print length of data sent

@@ -38,6 +38,7 @@ void configureSerial() {
 }
 
 void sendData() {
+  boatData.theTargetDuty = targetDuty;
   boatData.throttleDutyPercent = throttleDuty;
   boatData.mpptDutyPercent = mpptDuty;
   boatData.dutyPercent = duty;

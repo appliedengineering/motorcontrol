@@ -108,17 +108,23 @@ void setPWM() {
 
 void updateDuty() {
   if (!targetReached) {
-    if (duty < targetDuty) {
+    if (throttleDuty < targetDuty) {
       throttleDuty++;
       pwmUpdate.executionInterval = INTERVAL_UP;
-    } else if (duty > targetDuty) {
+    } else if (throttleDuty > targetDuty) {
       throttleDuty--;
       pwmUpdate.executionInterval = INTERVAL_DOWN;
     } else {
       targetReached = true;
     }
   }
-  if ((throttleDuty<60 && POWER_SUPPLY==2) || (POWER_SUPPLY==1)) {
+  // Temp. fix for self test
+  if (throttleDuty>=100) {
+    targetDuty = 0;
+  } else if (throttleDuty<=0) {
+    targetDuty = 100;
+  }
+  if ((throttleDuty<10 && POWER_SUPPLY==2) || (POWER_SUPPLY==1)) {
     duty = throttleDuty;
   } 
 }

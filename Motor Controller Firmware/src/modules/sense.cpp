@@ -35,9 +35,10 @@ float power;            // (W)
 float lastPower = 0;    // (W)
 float dP = 0;           // (W)
 int it = 1;
-int mpptDuty = duty;
-int lastMPPTduty;
+int mpptDuty = 20;
+int lastMPPTduty = 20;
 int dD;
+bool powerSupply = false;
 
 
 // Setup a oneWire instance to communicate with any OneWire device
@@ -94,7 +95,11 @@ void senseCurrent() {
     // Update MA internal sum to prevent accumulating errors.
     iSenseVADC = movAvgCurrent.getAverage();
   }
-  current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
+  if (powerSupply) {
+    current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
+  } else {
+    current = (duty/100.0)*7.77;
+  }
 }
 
 void senseVoltage() {
@@ -103,13 +108,23 @@ void senseVoltage() {
     vSenseADC += analogReadFast(VBAT);
   }
   vSenseADC /= 5;
-  voltage = vSenseADC * (44.8/1024);
+  if (powerSupply) { 
+    voltage = vSenseADC * (44.8/1024);
+  } else {
+    voltage = 13.0*log(10-current);
+  }
 }
 
 void sensePower() {
-  lastPower = power;
-  lastMPPTduty = mpptDuty;
-  power = voltage * current * duty;
+  if (powerSupply) {
+    power = voltage * current * duty;
+  } else {
+    power = voltage * current;
+  }
+  // in case current is negative
+  if (power<0) {
+    power*=-1;
+  }
 }
 
 void trackMPP() {
@@ -121,12 +136,16 @@ void trackMPP() {
     it *= -1;       // power is decreasing
     mpptDuty += it;
   }
-  if (throttleDuty >= 60 && POWER_SUPPLY == 2) {
+  if (throttleDuty >= 10 && POWER_SUPPLY == 2) {
     duty = mpptDuty;
+  } else {
+    mpptDuty = throttleDuty; // ramp up
   }
   if (mpptDuty > 100) {
     mpptDuty = 100;
   } else if (mpptDuty < 0) {
     mpptDuty = 0;
   }
+  lastPower = power;
+  lastMPPTduty = mpptDuty;
 }
