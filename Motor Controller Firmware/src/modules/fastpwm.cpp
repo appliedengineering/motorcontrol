@@ -1,17 +1,17 @@
 /**
  * Motor Controller Firmware
  * Copyright (c) 2020 Applied Engineering
- * 
+ *
  * Based on software from various contributors.
  * Copyright (c) 2020 Andrew Berkun / Alex Liu / William Zhou
- * 
+ *
  */
 
 /**
  * fastpwm.cpp
- * 
+ *
  * Controls PWM signal output
- * 
+ *
  */
 
 #include "fastpwm.h"
@@ -81,15 +81,17 @@ void setPWM() {
     TCCR2A &= ~(_BV(COM2A1) | _BV(COM2B1));
 
     // Reset zero current.
-    #if defined(MINIMUM_DUTY_PROTECTION)
-      senseZeroCurrent();
-    #endif
+#if defined(MINIMUM_DUTY_PROTECTION)
+    senseZeroCurrent();
+#endif
   } else {
     dutyZone = pwmCheckZone(duty);
     lastDutyZone = pwmCheckZone(lastDuty);
     if (lastDuty == 0) {
-      // Set up first PWM Zone: 1250Hz Fast PWM with OCR2A as TOP and Prescaler Divide Clock by 64 on Timer2.
-      // (http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf, P.130)
+      // Set up first PWM Zone: 1250Hz Fast PWM with OCR2A as TOP and Prescaler
+      // Divide Clock by 64 on Timer2.
+      // (http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf,
+      // P.130)
       TCCR2A = _BV(COM2A1) | _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);
     }
     if (dutyZone != lastDutyZone) {
