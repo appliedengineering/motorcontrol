@@ -15,11 +15,11 @@
  *
  */
 
-#include "fastpwm.h"
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include <RunningAverage.h>
 #include "../Configuration.h"
+#include "fastpwm.h"
+#include <DallasTemperature.h>
+#include <OneWire.h>
+#include <RunningAverage.h>
 
 extern int deviceCount;
 extern float tempC[];
@@ -28,21 +28,22 @@ extern int senseSamples;
 extern int avgCount;
 extern unsigned int sumCounter;
 extern const float conversionFactor;
-extern int zeroISenseVADC;  // (ADC)
-extern int iSenseVADC;      // (ADC)
-extern float current;       // (A)
-extern int vSenseADC;       // (ADC)
-extern float voltage;       // (V)
-extern float lastVoltage;   // (V)
-extern float dV;            // (V)
-extern float power;         // (W)
-extern float lastPower;     // (W)
-extern float dP;            // (W)
-extern int it;              // increment or decrement of duty
-extern int mpptDuty;        // (%)
-extern int lastDuty;        // (%)
+extern int zeroISenseVADC; // (ADC)
+extern int iSenseVADC;     // (ADC)
+extern float current;      // (A)
+extern int vSenseADC;      // (ADC)
+extern float voltage;      // (V)
+extern float lastVoltage;  // (V)
+extern float dV;           // (V)
+extern float power;        // (W)
+extern float lastPower;    // (W)
+extern float dP;           // (W)
+extern int it;             // increment or decrement of duty
+extern int mpptDuty;       // (%)
+extern int lastDuty;       // (%)
 extern int dD;
-extern bool powerSupply;    // if false, means no power supply is connected (simulation)
+extern bool
+    powerSupply; // if false, means no power supply is connected (simulation)
 
 extern OneWire oneWire;
 extern DallasTemperature tempSensors;
