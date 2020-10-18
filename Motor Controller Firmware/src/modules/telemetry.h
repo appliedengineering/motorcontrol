@@ -17,38 +17,15 @@
  * 
  */
 
+#include <ArduinoJson.h>
 #include "inputs.h"
 #include "nonblocking.h"
 #include "sense.h"
 #include "fastpwm.h"
 #include "protections.h"
-#include <SerialTransfer.h>
 
-extern unsigned int dataLength;
-
-struct telemetryData {
-  // Firmware info
-  char version[12];
-  int psuMode;
-  // Input and PWM readings
-  int throttlePercent;
-  int dutyPercent;
-  int pwmFrequency;
-  // Sense readings
-  float tempC;
-  float sourceVoltage;
-  float pwmCurrent;
-  float powerChange;
-  float voltageChange;
-  // Protections status
-  bool mddStatus;
-  bool ocpStatus;
-  bool ovpStatus;
-};
-
-extern telemetryData boatData;
+extern StaticJsonDocument<128> boatData;
 extern NonBlockingTask telemetryUpdate;
-extern SerialTransfer dataTransfer;
 
 void configureSerial();
 void sendData();

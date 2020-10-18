@@ -17,6 +17,6 @@
 
 #include "fastpwm.h"
 
-extern bool mddActive, ocpActive, uvpActive, ovpActive;
+extern bool mddActive, ocpActive, ovpActive;
 
 void checkProtections();

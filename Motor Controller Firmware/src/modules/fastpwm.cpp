@@ -16,10 +16,10 @@
 
 #include "fastpwm.h"
 
-int duty = 0;     // (%)
-int lastDuty = 0; // (%)
-int throttleDuty = 0; // %
-int lastThrottleDuty = 0; // %
+int duty = 0;             // (%)
+int lastDuty = 0;         // (%)
+int throttleDuty = 0;     // (%)
+int lastThrottleDuty = 0; // (%)
 
 // Configure PWM Zones.
 // pwmConfig pwmZones = {percentMax, prescale, resolution, multiplier};
@@ -118,7 +118,7 @@ void updateDuty() {
       targetReached = true;
     }
   }
-  if ((throttleDuty<60 && POWER_SUPPLY==2) || (POWER_SUPPLY==1)) {
+  if ((throttleDuty < 60 && POWER_SUPPLY == 2) || (POWER_SUPPLY == 1)) {
     duty = throttleDuty;
   } 
 }
