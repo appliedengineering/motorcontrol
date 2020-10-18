@@ -38,7 +38,7 @@ int it = 1;
 int mpptDuty = 20;
 int lastMPPTduty = 20;
 int dD;
-bool powerSupply = false;
+bool powerSupply = true;
 
 
 // Setup a oneWire instance to communicate with any OneWire device
@@ -136,7 +136,7 @@ void trackMPP() {
     it *= -1;       // power is decreasing
     mpptDuty += it;
   }
-  if (throttleDuty >= 10 && POWER_SUPPLY == 2) {
+  if (throttleDuty >= 70 && POWER_SUPPLY == 2) {
     duty = mpptDuty;
   } else {
     mpptDuty = throttleDuty; // ramp up
