@@ -23,6 +23,7 @@ def readFromArduino(queue, exit_event):
     
     while not exit_event.is_set():
         try:
+<<<<<<< HEAD
             if platform.system() == 'Darwin':
                 link = serial.Serial('/dev/tty.usbmodem14101', 115200)
             elif platform.system() == 'Linux':
@@ -30,6 +31,8 @@ def readFromArduino(queue, exit_event):
             else:
                 link = serial.Serial('COM1', 115200)
 
+=======
+>>>>>>> 921abd0936b7e0f2ebd9f1419122cd36a80e8e9e
             queue.put(link.read_until(end).rstrip(end))
             logging.info('Producer received data.')
         
@@ -55,6 +58,16 @@ if __name__ == '__main__':
     try:
         logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
 
+<<<<<<< HEAD
+=======
+        if platform.system() == 'Darwin':
+                link = serial.Serial('/dev/tty.usbmodem14101', 115200)
+        elif platform.system() == 'Linux':
+            link = serial.Serial('/dev/ttyACM0', 115200)
+        else:
+            link = serial.Serial('COM3', 115200)
+
+>>>>>>> 921abd0936b7e0f2ebd9f1419122cd36a80e8e9e
         pipeline = queue.Queue(maxsize=100)
         exit_event = threading.Event()
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
