@@ -15,11 +15,11 @@ import threading
 # INFO will log more information.
 log_level = logging.INFO
 
+# Define message end sequence.
+end = b'EOM\n'
+
 def readFromArduino(queue, exit_event):
     '''Read data from serial.'''
-    
-    # Define message end sequence.
-    end = b'\n\n'
     
     while not exit_event.is_set():
         try:
@@ -28,6 +28,7 @@ def readFromArduino(queue, exit_event):
         
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
+            exit_event.set()
     
     logging.info('Producer received event. Exiting now.')
     link.close()
@@ -41,6 +42,7 @@ def printToConsole(queue, exit_event):
 
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
+            exit_event.set()
     
     logging.info('Consumer received event. Exiting now.')
 
@@ -49,11 +51,14 @@ if __name__ == '__main__':
         logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
 
         if platform.system() == 'Darwin':
-                link = serial.Serial('/dev/tty.usbmodem14101', 115200)
+            link = serial.Serial('/dev/tty.usbmodem14101', 115200)
         elif platform.system() == 'Linux':
             link = serial.Serial('/dev/ttyACM0', 115200)
         else:
-            link = serial.Serial('COM3', 115200)
+            link = serial.Serial('COM9', 115200)
+        
+        # Throw away first reading
+        _ = link.read_until(end).rstrip(end)
 
         pipeline = queue.Queue(maxsize=100)
         exit_event = threading.Event()
@@ -67,3 +72,4 @@ if __name__ == '__main__':
 
     except Exception as e:
         logging.error('A %s error occurred.', e.__class__)
+        exit_event.set()
