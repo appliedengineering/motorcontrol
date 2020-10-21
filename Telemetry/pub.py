@@ -22,27 +22,21 @@ context = zmq.Context()
 sock = context.socket(zmq.PUB)
 sock.bind('epgm://224.0.0.1:28650')
 
+# Define message end sequence.
+end = b'EOM\n'
+
 def readFromArduino(queue, exit_event):
     '''Read data from serial.'''
     
-    # Define message end sequence.
-    end = b'\n\n'
-    
     while not exit_event.is_set():
         try:
-            if platform.system() == 'Darwin':
-                link = serial.Serial('/dev/tty.usbmodem14101', 115200)
-            elif platform.system() == 'Linux':
-                link = serial.Serial('/dev/ttyACM0', 115200)
-            else:
-                link = serial.Serial('COM1', 115200)
-
             queue.put(link.read_until(end).rstrip(end))
             logging.info('Producer received data.')
         
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
-
+            exit_event.set()
+    
     logging.info('Producer received event. Exiting now.')
     link.close()
 
@@ -55,6 +49,7 @@ def sendZmqMulticast(queue, exit_event):
 
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
+            exit_event.set()
     
     logging.info('Consumer received event. Exiting now.')
     sock.close()
@@ -62,6 +57,16 @@ def sendZmqMulticast(queue, exit_event):
 if __name__ == '__main__':
     try:
         logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
+
+        if platform.system() == 'Darwin':
+            link = serial.Serial('/dev/tty.usbmodem14101', 115200)
+        elif platform.system() == 'Linux':
+            link = serial.Serial('/dev/ttyACM0', 115200)
+        else:
+            link = serial.Serial('COM9', 115200)
+        
+        # Throw away first reading
+        _ = link.read_until(end).rstrip(end)
 
         pipeline = queue.Queue(maxsize=100)
         exit_event = threading.Event()
@@ -75,3 +80,4 @@ if __name__ == '__main__':
 
     except Exception as e:
         logging.error('A %s error occurred.', e.__class__)
+        exit_event.set()
