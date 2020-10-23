@@ -45,5 +45,5 @@ void sendData() {
   boatData["ovpStatus"] = ovpActive;
   serializeMsgPack(boatData, Serial);
   // Send message end sequence.
-  Serial.print("\n\n");
+  Serial.print("EOM\n");
 }
