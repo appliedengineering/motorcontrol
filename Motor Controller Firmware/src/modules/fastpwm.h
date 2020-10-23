@@ -20,6 +20,7 @@
 #include "sense.h"
 #include "../Configuration.h"
 
+extern int border;            // value of throttleDuty at which to switch to mppt
 extern int duty;              // (%)
 extern int lastDuty;          // (%)
 extern int throttleDuty;      // (%)
