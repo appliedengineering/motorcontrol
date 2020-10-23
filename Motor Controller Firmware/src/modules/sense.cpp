@@ -130,7 +130,7 @@ void trackMPP() {
   }
   // MPP and throttle switch
   if (throttleDuty>=70) { // going fast
-    if (targetDuty>=90) { // want max power
+    if (targetDuty>=70) { // want max power
         duty = mpptDuty;
     } else {              // ramp down duty directly
         if (duty<70) {
