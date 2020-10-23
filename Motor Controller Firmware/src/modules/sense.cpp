@@ -128,19 +128,26 @@ void trackMPP() {
     it *= -1; // power is decreasing
     mpptDuty += it;
   }
-  // MPP and throttle switch
-  if (throttleDuty>=70) { // going fast
-    if (targetDuty>=70) { // want max power
-        duty = mpptDuty;
-    } else {              // ramp down duty directly
-        if (duty<70) {
+  // MPP and throttle decision
+  if (targetDuty>=border) {
+    if (throttleDuty<border) { // ramp up
+      // throttle, make mpptDuty start from throttle to prevent throttle--> mppt jump
+      mpptDuty = throttleDuty;
+    } else { // mppt
+      duty = mpptDuty;
+    }
+  } else {
+    if (throttleDuty<border) { // ramp down
+      // throttle
+    } else { // get mppt to make duty reach border
+      if (abs(border-duty)>=2) { // when duty too far from border, push it towards the border 
+        if (duty<border) {
           duty++;
-        } else if (duty>70) {
+        } else if (duty>border) {
           duty--;
         }
-    }  
-  } else {
-       mpptDuty = throttleDuty;
+      }
+    }
   }
   // Bound duty
   if (mpptDuty > 100) {

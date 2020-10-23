@@ -132,11 +132,11 @@ void updateDuty() {
         // mppt
       }
     } else {
-      if (throttleDuty<90) { // ramp down
+      if (throttleDuty<border) { // ramp down
         duty = throttleDuty;
       } else { // wait for mppt to reach border
-        if (throttleDuty-90<2 && abs(throttleDuty-duty)>=2) {
-          throttleDuty++; // delay going down until duty ramps up/down to the border
+        if (throttleDuty-border<2 && abs(border-duty)>=2) {
+          throttleDuty++; // delay going down until duty ramps up/down to nearer the border
         }
       }
     }
