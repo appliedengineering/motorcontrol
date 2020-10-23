@@ -16,6 +16,7 @@
 
 #include "fastpwm.h"
 
+int border = 90;
 int duty = 0;             // (%)
 int lastDuty = 0;         // (%)
 int throttleDuty = 0;     // (%)
@@ -120,13 +121,24 @@ void updateDuty() {
       targetReached = true;
     }
   }
-  // Temp. fix for self test
-  if (throttleDuty >= 100) {
-    targetDuty = 0;
-  } else if (throttleDuty <= 0) {
-    targetDuty = 100;
-  }
-  if ((throttleDuty < 70 && POWER_SUPPLY == 2) || (POWER_SUPPLY == 1)) {
-    duty = throttleDuty;
+  // Decision between throttle and mppt
+  if (POWER_SUPPLY == 1) { // on batteries -- no need for mppt
+   duty = throttleDuty;
+  } else {
+    if (targetDuty>=border) {
+      if (throttleDuty<border) { // ramp up
+        duty = throttleDuty;
+      } else { 
+        // mppt
+      }
+    } else {
+      if (throttleDuty<90) { // ramp down
+        duty = throttleDuty;
+      } else { // wait for mppt to reach border
+        if (throttleDuty-90<2 && abs(throttleDuty-duty)>=2) {
+          throttleDuty++; // delay going down until duty ramps up/down to the border
+        }
+      }
+    }
   }
 }
