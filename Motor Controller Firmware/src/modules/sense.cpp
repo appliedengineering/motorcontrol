@@ -115,31 +115,34 @@ void senseVoltage() {
 }
 
 void sensePower() {
-  if (powerSupply) {
-    power = voltage * current * duty;
-  } else {
-    power = voltage * current;
-  }
-  // in case current is negative
-  if (power < 0) {
-    power *= -1;
-  }
+  power = voltage * current * duty;
 }
 
 void trackMPP() {
   dD = mpptDuty - lastMPPTduty;
   dP = power - lastPower;
+  // finding MPP
   if (dP > 0) {
     mpptDuty += it; // keep changing duty in the same direction we were before
   } else {
     it *= -1; // power is decreasing
     mpptDuty += it;
   }
-  if (throttleDuty >= 70 && POWER_SUPPLY == 2) {
-    duty = mpptDuty;
+  // MPP and throttle switch
+  if (throttleDuty>=70) { // going fast
+    if (targetDuty>=90) { // want max power
+        duty = mpptDuty;
+    } else {              // ramp down duty directly
+        if (duty<70) {
+          duty++;
+        } else if (duty>70) {
+          duty--;
+        }
+    }  
   } else {
-    mpptDuty = throttleDuty; // ramp up
+       mpptDuty = throttleDuty;
   }
+  // Bound duty
   if (mpptDuty > 100) {
     mpptDuty = 100;
   } else if (mpptDuty < 0) {
