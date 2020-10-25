@@ -22,14 +22,14 @@ fi
 
 # Check if virtualenv is installed
 if ! type "virtualenv" > /dev/null; then
-    pip3 install virtualenv
+    apt install -y python3-virtualenv
 else
     echo "Found virtualenv."
 fi
 
 # Create virtualenv if does not exist 
 if [ ! -d ".env" ]; then
-    virtualenv .env
+    virtualenv .env --system-site-packages
     source .env/bin/activate
     pip3 install -r requirements.txt
 else

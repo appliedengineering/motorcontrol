@@ -11,10 +11,3 @@
 !.pio/build/uno
 .pio/build/uno/*
 !.pio/build/uno/firmware.hex
-
-### VisualStudioCode ###
-.vscode
-
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history

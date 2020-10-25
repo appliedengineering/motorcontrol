@@ -46,13 +46,17 @@ void loop() {
     lastDuty = duty;
   }
 
-  readInput();
+  // Read throttle input without blocking.
+  if (nonblockingUpdate(inputUpdate)) {
+    readInput();
+  }
 
   // Update duty without blocking.
   if (nonblockingUpdate(pwmUpdate)) {
     updateDuty();
     checkProtections();
   }
+
   // Read temperatures without blocking.
   if (nonblockingUpdate(tempUpdate)) {
     senseTemperatures();
@@ -79,6 +83,7 @@ void loop() {
       trackMPP();
     }
   #endif
+
   // Send telemetry without blocking.
   #if defined(TELEMETRY)
     if (nonblockingUpdate(telemetryUpdate)) {

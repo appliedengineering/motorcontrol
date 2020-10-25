@@ -17,7 +17,9 @@ context = zmq.Context()
 sock = context.socket(zmq.SUB)
 # Define subscription.
 sock.setsockopt(zmq.SUBSCRIBE, b'')
-sock.connect('epgm://224.0.0.1:28650')
+# Define connection address.
+address = 'epgm://224.0.0.1:28650'
+sock.connect(address)
 
 if __name__ == '__main__':
     try:
@@ -25,6 +27,7 @@ if __name__ == '__main__':
         
         while True:
             print(msgpack.unpackb(sock.recv(), use_list=False, raw=False))
+            logging.info('Received data from %s.', address)
 
     except KeyboardInterrupt:
         logging.info('Exiting now.')

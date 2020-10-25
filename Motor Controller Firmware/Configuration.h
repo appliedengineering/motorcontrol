@@ -23,12 +23,12 @@
 // @section info
 
 // Version info of this build reported to host (must be YYYY.MM.DD-X format).
-#define STRING_VERSION "2020.06.20-3"
+#define STRING_VERSION "2020.10.24-5"
 
 // @section machine
 
 // Enable telemetry at the specified serial communication speed.
-#define TELEMETRY 115200
+#define TELEMETRY 500000
 
 //===========================================================================
 //============================= Power Options ===============================

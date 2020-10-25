@@ -25,6 +25,9 @@ bool targetReached = false;
   int rawDuty = 0;  // (ADC)
 #endif
 
+// Read input every 10 milliseconds.
+NonBlockingTask inputUpdate(10);
+
 void readInput() {
   #if defined(THROTTLE)
     // Use average of 5 samples to smooth readings.

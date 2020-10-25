@@ -29,4 +29,6 @@ extern bool targetReached;
   extern int rawDuty;   // (ADC)
 #endif
 
+extern NonBlockingTask inputUpdate;
+
 void readInput();

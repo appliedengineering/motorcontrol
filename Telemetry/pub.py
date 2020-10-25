@@ -35,7 +35,6 @@ def readFromArduino(queue, exit_event):
         
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
-            exit_event.set()
     
     logging.info('Producer received event. Exiting now.')
     link.close()
@@ -49,7 +48,6 @@ def sendZmqMulticast(queue, exit_event):
 
         except Exception as e:
             logging.error('A %s error occurred.', e.__class__)
-            exit_event.set()
     
     logging.info('Consumer received event. Exiting now.')
     sock.close()
@@ -59,11 +57,11 @@ if __name__ == '__main__':
         logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
 
         if platform.system() == 'Darwin':
-            link = serial.Serial('/dev/tty.usbmodem14101', 115200)
+            link = serial.Serial('/dev/tty.usbmodem14101', 500000)
         elif platform.system() == 'Linux':
-            link = serial.Serial('/dev/ttyACM0', 115200)
+            link = serial.Serial('/dev/ttyACM0', 500000)
         else:
-            link = serial.Serial('COM9', 115200)
+            link = serial.Serial('COM9', 500000)
         
         # Throw away first reading
         _ = link.read_until(end).rstrip(end)

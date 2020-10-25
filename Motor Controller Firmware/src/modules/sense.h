@@ -22,6 +22,8 @@
 #include <RunningAverage.h>
 
 extern int deviceCount;
+extern int tempResolution;
+extern int conversionTime;
 extern float tempC[];
 
 extern int senseSamples;
@@ -42,8 +44,7 @@ extern int it;             // increment or decrement of duty
 extern int mpptDuty;       // (%)
 extern int lastDuty;       // (%)
 extern int dD;
-extern bool
-    powerSupply; // if false, means no power supply is connected (simulation)
+extern bool powerSupply;   // if false, means no power supply is connected (simulation)
 
 extern OneWire oneWire;
 extern DallasTemperature tempSensors;

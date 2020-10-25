@@ -25,7 +25,6 @@ NonBlockingTask telemetryUpdate(100);
 
 void configureSerial() {
   Serial.begin(TELEMETRY);
-  boatData["version"] = STRING_VERSION;
   boatData["psuMode"] = POWER_SUPPLY;
 }
 

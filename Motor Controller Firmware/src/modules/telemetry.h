@@ -24,7 +24,6 @@
 #include "fastpwm.h"
 #include "protections.h"
 
-extern StaticJsonDocument<128> boatData;
 extern NonBlockingTask telemetryUpdate;
 
 void configureSerial();

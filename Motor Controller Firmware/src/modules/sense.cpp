@@ -18,6 +18,10 @@
 #include "../Configuration.h"
 
 int deviceCount;
+// Set temperature sensor resolution {9, 10, 11, 12}.
+int tempResolution = 12;
+// Temperature conversion takes up to 750 milliseconds.
+int conversionTime = 750 / (1 << (12 - tempResolution));
 float tempC[2];
 
 int senseSamples;
@@ -45,10 +49,10 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass oneWire reference to DallasTemperature library
 DallasTemperature tempSensors(&oneWire);
 
-// Sense temperatures every second.
-NonBlockingTask tempUpdate(1000);
-// Sense current every millisecond.
-NonBlockingTask iSenseUpdate(1);
+// Sense temperatures after conversions complete.
+NonBlockingTask tempUpdate(conversionTime);
+// Sense current every 10 milliseconds.
+NonBlockingTask iSenseUpdate(10);
 // Sense voltage every 10 milliseconds.
 NonBlockingTask vSenseUpdate(10);
 // Sense power every 10 milliseconds.
@@ -60,19 +64,25 @@ NonBlockingTask mpptUpdate(50);
 RunningAverage movAvgCurrent(avgCount);
 
 void configureTempSensors() {
-  // Start up the DallasTemperature library
+  // Start up the DallasTemperature library.
   tempSensors.begin();
-  // Locate devices on the bus
+  // Locate devices on the bus.
   deviceCount = tempSensors.getDeviceCount();
+  // Set resolution on all sensors.
+  tempSensors.setResolution(tempResolution);
+  // Do not block while sensors do conversion.
+  tempSensors.setWaitForConversion(false);
+  // Send command to all sensors to begin temperature conversion.
+  tempSensors.requestTemperatures();
 }
 
 void senseTemperatures() {
-  // Send command to all the sensors for temperature conversion
-  tempSensors.requestTemperatures();
-  // Get temperature from each sensor
+  // Get temperature from each sensor.
   for (senseSamples = 0; senseSamples < deviceCount; senseSamples++) {
     tempC[senseSamples] = tempSensors.getTempCByIndex(senseSamples);
   }
+  // Send command to all sensors to begin next temperature conversion.
+  tempSensors.requestTemperatures();
 }
 
 // Get offset current, I_IS(offset).
