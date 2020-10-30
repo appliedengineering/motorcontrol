@@ -10,7 +10,7 @@ import serial
 import time
 import threading
 import zmq
-
+import traceback
 # Set logging verbosity.
 # CRITICAL will not log anything.
 # ERROR will only log exceptions.
@@ -21,7 +21,7 @@ log_level = logging.INFO
 context = zmq.Context()
 # Define the socket using the Context.
 radio = context.socket(zmq.RADIO)
-radio.connect('udp://225.0.0.1:5556')
+radio.connect('udp://224.0.0.1:28650')
 
 # Define message end sequence.
 end = b'EOM\n'
@@ -31,32 +31,31 @@ def readFromArduino(queue, exit_event):
     
     while not exit_event.is_set():
         try:
-            queue.put(link.read_until(end).rstrip(end))
+            #replace the string literal with link data for motor testing
+            queue.put(msgpack.packb("test string"))
             logging.info('Producer received data.')
         
         except:
-            import traceback
             traceback.print_exc()
             exit_event.set()
     
     logging.info('Producer received event. Exiting now.')
-    link.close()
+    #link.close()
 
 def sendZmqMulticast(queue, exit_event):
     '''Multicast data with ZeroMQ.'''
     while not exit_event.is_set() or not queue.empty():
         try:
-            radio.send(msgpack.packb(b'test string'))
+            radio.send(queue.get())
             logging.info('Consumer sending data. Queue size is %d.', queue.qsize())
 
         except:
-            import traceback
             traceback.print_exc()
             exit_event.set()
     
     logging.info('Consumer received event. Exiting now.')
     radio.close()
-    time.sleep(1);
+    time.sleep(10)
 
 if __name__ == '__main__':
     try:
@@ -75,14 +74,14 @@ if __name__ == '__main__':
         pipeline = queue.Queue(maxsize=100)
         exit_event = threading.Event()
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-    #        executor.submit(readFromArduino, pipeline, exit_event)
+            executor.submit(readFromArduino, pipeline, exit_event)
             executor.submit(sendZmqMulticast, pipeline, exit_event)
+            time.sleep(10);
     
     except KeyboardInterrupt:
         logging.info('Setting exit event.')
         exit_event.set()
 
     except:
-        import traceback
         traceback.print_exc()
         exit_event.set()
