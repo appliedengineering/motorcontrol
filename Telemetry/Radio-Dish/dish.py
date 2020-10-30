@@ -25,13 +25,16 @@ sock.rcvtimeo = 1000
 if __name__ == '__main__':
     try:
         logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
-        
+        print("entering loop")
         while True:
             try:
                 print(msgpack.unpackb(sock.recv(flags=zmq.NOBLOCK)))
                 logging.info('Received data from %s.', address)
-            except zmq.Again as e:
-                print('ZMQ error - ', e)
+            except zmq.ZMQError as e:
+              if e.errno == zmq.EAGAIN:
+                pass # no message was ready (yet!)
+              else:
+                traceback.print_exc()
             time.sleep(1);
 
     except KeyboardInterrupt:
