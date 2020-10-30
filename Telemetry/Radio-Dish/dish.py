@@ -31,7 +31,7 @@ if __name__ == '__main__':
                 print(msgpack.unpackb(sock.recv(flags=zmq.NOBLOCK)))
                 logging.info('Received data from %s.', address)
             except zmq.Again as e:
-                print('no data recieved from zmq during this iteration')
+                print('ZMQ error - ', e)
             time.sleep(1);
 
     except KeyboardInterrupt:
