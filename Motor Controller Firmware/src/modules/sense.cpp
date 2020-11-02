@@ -42,7 +42,15 @@ int it = 1;
 int mpptDuty = 20;
 int lastMPPTduty = 20;
 int dD;
-bool powerSupply = true;
+float rpm = 0;
+float lastRPM = 0;
+float dR = 0;
+int currentTachoTime = 0;
+int lastTachoTime = 0;
+int dT = 0;
+int rev = 0;
+float momentOfIntertia = 0.1129; // need to actually calculate this
+float torque = 0;
 
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
@@ -59,6 +67,10 @@ NonBlockingTask vSenseUpdate(10);
 NonBlockingTask pSenseUpdate(10);
 // Track MPP every 50 milliseconds.
 NonBlockingTask mpptUpdate(50);
+// Find RPM every 10 ms
+NonBlockingTask rpmUpdate(50);
+// Find torque every 10 ms
+NonBlockingTask torqueUpdate(50);
 
 // Moving average uses last avgCount samples.
 RunningAverage movAvgCurrent(avgCount);
@@ -104,11 +116,11 @@ void senseCurrent() {
     // Update MA internal sum to prevent accumulating errors.
     iSenseVADC = movAvgCurrent.getAverage();
   }
-  if (powerSupply) {
-    current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
-  } else {
+  # if TESTING_MODE==2 
     current = (duty / 100.0) * 7.77;
-  }
+  # else 
+    current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
+  # endif
 }
 
 void senseVoltage() {
@@ -117,15 +129,19 @@ void senseVoltage() {
     vSenseADC += analogReadFast(VBAT);
   }
   vSenseADC /= 5;
-  if (powerSupply) {
-    voltage = vSenseADC * (44.8 / 1024);
-  } else {
+  # if TESTING_MODE==2 
     voltage = 13.0 * log(10 - current);
-  }
+  # else 
+    voltage = vSenseADC * (44.8 / 1024);
+  # endif
 }
 
 void sensePower() {
-  power = voltage * current * duty;
+  # if TESTING_MODE==2
+    power = voltage * current;
+  # else 
+    power = voltage * current * duty;
+  # endif
 }
 
 void trackMPP() {
@@ -167,4 +183,11 @@ void trackMPP() {
   }
   lastPower = power;
   lastMPPTduty = mpptDuty;
+}
+
+void trackTorque() {
+  dT = currentTachoTime-lastTachoTime;
+  dR = rpm - lastRPM;
+  torque = momentOfIntertia * (dR * M_PI/30.0)/(1000.0*dT);
+  lastRPM = rpm;
 }

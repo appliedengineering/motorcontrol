@@ -29,6 +29,13 @@ void configureSerial() {
 }
 
 void sendData() {
+  # if TESTING_MODE==3 
+    boatData["RPM"] = rpm;
+    boatData["Torque"] = torque;
+  # else if TESTING_MODE==2
+    boatData["throttleDuty"] = throttleDuty;
+    boatData["mpptDuty"] = mpptDuty;
+  # endif
   boatData["throttlePercent"] = targetDuty;
   boatData["dutyPercent"] = duty;
   boatData["pwmFrequency"] = F_CPU / (cpuPrescaler * pwmResolution);

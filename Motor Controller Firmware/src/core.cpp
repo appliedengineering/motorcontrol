@@ -29,8 +29,15 @@ void setup() {
   // Initialize ADC circuitry and discard first dummy sample
   (void)analogRead(IS_1);
   senseZeroCurrent();
+
+  attachInterrupt(0, isr, RISING);
 }
 /******************** END Setup ******************************/
+
+// isr for tachometer (Interrupt Service Routine)
+void isr() {
+  rev++;
+}
 
 /******************** BEGIN Main Loop ************************/
 void loop() {
@@ -81,6 +88,22 @@ void loop() {
   #if defined(MAX_POWER_POINT_TRACKING)
     if (nonblockingUpdate(mpptUpdate)) {
       trackMPP();
+    }
+  #endif
+
+  // Track rpm without blocking.
+  #if TESTING_MODE==3
+    if (nonblockingUpdate(rpmUpdate)) {
+      detachInterrupt(0);
+      currentTachoTime = millis();
+      dT = currentTachoTime - lastTachoTime;
+      rpm = (rev/dT)*60000;
+      lastTachoTime = currentTachoTime;
+      rev = 0;
+      attachInterrupt(0, isr, RISING);
+    }
+    if (nonblockingUpdate(torqueUpdate)) {
+      trackTorque();
     }
   #endif
 
