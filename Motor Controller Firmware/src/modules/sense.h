@@ -44,7 +44,15 @@ extern int it;             // increment or decrement of duty
 extern int mpptDuty;       // (%)
 extern int lastDuty;       // (%)
 extern int dD;
-extern bool powerSupply;   // if false, means no power supply is connected (simulation)
+extern float rpm;
+extern float lastRPM;
+extern float dR; // delta rpm
+extern int currentTachoTime;
+extern int lastTachoTime;
+extern int dT; // delta tacho time
+extern int rev;
+extern float momentOfIntertia; // kg*m^2
+extern float torque;
 
 extern OneWire oneWire;
 extern DallasTemperature tempSensors;
