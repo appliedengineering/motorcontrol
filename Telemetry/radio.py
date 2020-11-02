@@ -64,8 +64,9 @@ if __name__ == '__main__':
             link = serial.Serial('/dev/ttyACM0', 500000)
         else:
             link = serial.Serial('COM9', 500000)
-        # Throw away first reading
+        # Throw away first and second reading
         _ = link.read_until(end).rstrip(end)
+        _2 = link.read_until(end).rstrip(end)
         # Set up data queue
         pipeline = queue.Queue(maxsize=100)
         # Create exit event
