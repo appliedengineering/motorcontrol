@@ -62,6 +62,8 @@ extern NonBlockingTask iSenseUpdate;
 extern NonBlockingTask vSenseUpdate;
 extern NonBlockingTask pSenseUpdate;
 extern NonBlockingTask mpptUpdate;
+extern NonBlockingTask rpmUpdate;
+extern NonBlockingTask torqueUpdate;
 
 extern RunningAverage movAvgCurrent;
 
@@ -73,3 +75,4 @@ void senseCurrent();
 void senseVoltage();
 void sensePower();
 void trackMPP();
+void trackTorque();

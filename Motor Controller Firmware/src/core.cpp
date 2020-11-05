@@ -18,6 +18,11 @@
   #include "modules/telemetry.h"
 #endif
 
+// isr for tachometer (Interrupt Service Routine)
+void isr() {
+  rev++;
+}
+
 /******************** BEGIN Setup ****************************/
 void setup() {
   configurePins();
@@ -33,11 +38,6 @@ void setup() {
   attachInterrupt(0, isr, RISING);
 }
 /******************** END Setup ******************************/
-
-// isr for tachometer (Interrupt Service Routine)
-void isr() {
-  rev++;
-}
 
 /******************** BEGIN Main Loop ************************/
 void loop() {
