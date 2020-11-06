@@ -188,6 +188,10 @@ void trackMPP() {
 void trackTorque() {
   dT = currentTachoTime-lastTachoTime;
   dR = rpm - lastRPM;
-  torque = momentOfIntertia * (dR * M_PI/30.0)/(1000.0*dT);
+  if (dT!=0) {
+    torque = momentOfIntertia * (dR * M_PI/30.0)/(1000.0*dT);
+  } else {
+    torque = 0;
+  }
   lastRPM = rpm;
 }
