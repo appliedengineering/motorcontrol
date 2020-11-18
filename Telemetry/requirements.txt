@@ -1,6 +1,7 @@
 msgpack
 pyserial
 PyYAML
-# You will receive errors because the pyzmq package doesn't support PGM.
-# Compile pyzmq with PGM: https://stackoverflow.com/questions/37177322/how-to-install-pyzmq-with-pgm
+# You may receive errors because pyzmq doesn't support draft sockets by default.
+# Install pyzmq using the following command:
+#   pip install -v --pre pyzmq --install-option=--enable-drafts
 # pyzmq

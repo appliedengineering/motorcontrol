@@ -4,9 +4,9 @@
 import concurrent.futures
 import logging
 import msgpack
-import platform
 import queue
 import serial
+import serial.tools.list_ports
 import threading
 
 # Set logging verbosity.
@@ -17,6 +17,22 @@ log_level = logging.INFO
 
 # Define message end sequence.
 end = b'EOM\n'
+
+def findArduinoPort():
+    '''Locate Arduino serial port.'''
+
+    arduino_ports = [
+        p.device
+        for p in serial.tools.list_ports.comports()
+        if 'Arduino' in p.description or 'Generic CDC' in p.description or 'ttyACM0' in p.description
+    ]
+    if not arduino_ports:
+        logging.error('No Arduino found.')
+    if len(arduino_ports) > 1:
+        logging.info('Multiple Arduinos found. Connecting to the first one.')
+    
+    logging.info('Found an Arduino at %s.', arduino_ports[0])
+    return arduino_ports[0]
 
 def readFromArduino(queue, exit_event):
     '''Read data from serial.'''
@@ -48,13 +64,9 @@ if __name__ == '__main__':
     try:
         logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=log_level, datefmt="%H:%M:%S")
 
-        if platform.system() == 'Darwin':
-            link = serial.Serial('/dev/tty.usbmodem14101', 500000)
-        elif platform.system() == 'Linux':
-            link = serial.Serial('/dev/ttyACM0', 500000)
-        else:
-            link = serial.Serial('COM9', 500000)
-        
+        # Detect Arduino port and open serial connection
+        link = serial.Serial(findArduinoPort(), 500000)
+
         # Throw away first reading
         _ = link.read_until(end).rstrip(end)
 
