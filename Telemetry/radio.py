@@ -10,6 +10,7 @@ import serial.tools.list_ports
 import threading
 import traceback
 import zmq
+import time
 
 # Set logging verbosity.
 # CRITICAL will not log anything.
@@ -25,6 +26,15 @@ radio.connect('udp://224.0.0.1:28650')
 
 # Define message end sequence.
 end = b'EOM\n'
+
+startTimestamp = time.time()
+
+def addTimestampToStruct(data):
+    buffer = msgpack.unpackb(data)
+    buffer["timeStamp"] = time.time()-startTimestamp
+    #print(buffer)
+    # NOTE: timeStamp is a 64 bit Float or Double NOT a 32 bit float as is the case with the other data
+    return msgpack.packb(buffer)
 
 def findArduinoPort():
     '''Locate Arduino serial port.'''
@@ -44,7 +54,7 @@ def readFromArduino(queue, exit_event):
     '''Read data from serial.'''
     while not exit_event.is_set():
         try:
-            queue.put(link.read_until(end).rstrip(end))
+            queue.put(addTimestampToStruct(link.read_until(end).rstrip(end)))
             logging.info('Producer received data.')
         except:
             traceback.print_exc()
