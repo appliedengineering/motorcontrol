@@ -116,11 +116,11 @@ void senseCurrent() {
     // Update MA internal sum to prevent accumulating errors.
     iSenseVADC = movAvgCurrent.getAverage();
   }
-  # if TESTING_MODE==2 
+  #if TESTING_MODE==2 
     current = (duty / 100.0) * 7.77;
-  # else 
+  #else 
     current = conversionFactor * (iSenseVADC - zeroISenseVADC) * 19500;
-  # endif
+  #endif
 }
 
 void senseVoltage() {
@@ -129,19 +129,19 @@ void senseVoltage() {
     vSenseADC += analogReadFast(VBAT);
   }
   vSenseADC /= 5;
-  # if TESTING_MODE==2 
+  #if TESTING_MODE==2 
     voltage = 13.0 * log(10 - current);
-  # else 
+  #else 
     voltage = vSenseADC * (44.8 / 1024);
-  # endif
+  #endif
 }
 
 void sensePower() {
-  # if TESTING_MODE==2
+  #if TESTING_MODE==2
     power = voltage * current;
-  # else 
+  #else 
     power = voltage * current * duty;
-  # endif
+  #endif
 }
 
 void trackMPP() {

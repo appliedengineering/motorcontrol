@@ -35,7 +35,10 @@ void setup() {
   (void)analogRead(IS_1);
   senseZeroCurrent();
 
-  attachInterrupt(0, isr, RISING);
+  #if TESTING_MODE==3
+      pinMode(2, INPUT_PULLUP);
+      attachInterrupt(2, isr, RISING);
+  #endif
 }
 /******************** END Setup ******************************/
 
@@ -94,13 +97,13 @@ void loop() {
   // Track rpm without blocking.
   #if TESTING_MODE==3
     if (nonblockingUpdate(rpmUpdate)) {
-      detachInterrupt(0);
+      detachInterrupt(2);
       currentTachoTime = millis();
       dT = currentTachoTime - lastTachoTime;
       rpm = (rev/dT)*60000;
       lastTachoTime = currentTachoTime;
       rev = 0;
-      attachInterrupt(0, isr, RISING);
+      attachInterrupt(2, isr, RISING);
     }
     if (nonblockingUpdate(torqueUpdate)) {
       trackTorque();
