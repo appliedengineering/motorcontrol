@@ -44,13 +44,14 @@ extern int it;             // increment or decrement of duty
 extern int mpptDuty;       // (%)
 extern int lastDuty;       // (%)
 extern int dD;
+
 extern float rpm;
 extern float lastRPM;
 extern float dR; // delta rpm
-extern int currentTachoTime;
-extern int lastTachoTime;
-extern int dT; // delta tacho time
-extern int rev;
+extern long lastRPMTime;
+extern long dTRPM; // difference in time between two interrupts;
+extern long lastTorqueTime;
+extern long dTTorque; // difference in time between two rpm readings
 extern float momentOfIntertia; // kg*m^2
 extern float torque;
 

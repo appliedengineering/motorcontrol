@@ -21,7 +21,7 @@
 StaticJsonDocument<128> boatData;
 
 // Send telemetry at 10 Hz.
-NonBlockingTask telemetryUpdate(100);
+NonBlockingTask telemetryUpdate(1000);
 
 void configureSerial() {
   Serial.begin(TELEMETRY);
@@ -31,7 +31,12 @@ void configureSerial() {
 void sendData() {
   #if TESTING_MODE==3 
     boatData["rpm"] = rpm;
+    boatData["dTrpm"] = dTRPM;
+    boatData["lastRPMTime"] = lastRPMTime;
     boatData["torque"] = torque;
+    boatData["dR"] = dR;
+    boatData["dTTorqe"] = dTTorque;
+    boatData["lastTorqueTime"] = lastTorqueTime;
   #elif TESTING_MODE==2
     boatData["throttleDuty"] = throttleDuty;
     boatData["mpptDuty"] = mpptDuty;

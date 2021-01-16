@@ -20,7 +20,8 @@
 
 // isr for tachometer (Interrupt Service Routine)
 void isr() {
-  rev++;
+  dTRPM = micros()-lastRPMTime;
+  lastRPMTime = micros();
 }
 
 /******************** BEGIN Setup ****************************/
@@ -37,7 +38,7 @@ void setup() {
 
   #if TESTING_MODE==3
       pinMode(2, INPUT_PULLUP);
-      attachInterrupt(2, isr, RISING);
+      attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
   #endif
 }
 /******************** END Setup ******************************/
@@ -97,13 +98,9 @@ void loop() {
   // Track rpm without blocking.
   #if TESTING_MODE==3
     if (nonblockingUpdate(rpmUpdate)) {
-      detachInterrupt(2);
-      currentTachoTime = millis();
-      dT = currentTachoTime - lastTachoTime;
-      rpm = (rev/dT)*60000;
-      lastTachoTime = currentTachoTime;
-      rev = 0;
-      attachInterrupt(2, isr, RISING);
+      detachInterrupt(digitalPinToInterrupt(2));
+      rpm = 60000000.0/dTRPM;
+      attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
     }
     if (nonblockingUpdate(torqueUpdate)) {
       trackTorque();

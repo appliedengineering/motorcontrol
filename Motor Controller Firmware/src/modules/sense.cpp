@@ -42,13 +42,14 @@ int it = 1;
 int mpptDuty = 20;
 int lastMPPTduty = 20;
 int dD;
+// stuff for tachometer
 float rpm = 0;
 float lastRPM = 0;
 float dR = 0;
-int currentTachoTime = 0;
-int lastTachoTime = 0;
-int dT = 0;
-int rev = 0;
+long lastRPMTime = 0;
+long dTRPM = 1;
+long lastTorqueTime = 0;
+long dTTorque = 1;
 float momentOfIntertia = 0.1129; // need to actually calculate this
 float torque = 0;
 
@@ -186,12 +187,13 @@ void trackMPP() {
 }
 
 void trackTorque() {
-  dT = currentTachoTime-lastTachoTime;
+  dTTorque = micros()-lastTorqueTime;
   dR = rpm - lastRPM;
-  if (dT!=0) {
-    torque = momentOfIntertia * (dR * M_PI/30.0)/(1000.0*dT);
+  if (dTTorque!=0) {
+    torque = momentOfIntertia * (dR * M_PI/30.0)/(dTTorque/1000000.0);
   } else {
     torque = 0;
   }
   lastRPM = rpm;
+  lastTorqueTime = micros();
 }
