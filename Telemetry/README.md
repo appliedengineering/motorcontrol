@@ -5,7 +5,7 @@ When using pyzmq, make SURE to use version 19.0.2 by using the install command `
 
 If you're getting errors with methods not showing up in cython, it's due to an invalid brew installation. From what I can tell, the latest `zeromq.rb` script is also corrupt when dealing with draft methods. You can find `zeromq.rb` at `/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula`.
 
-So far, the only `zeromq.rb` script that works is as follows:
+So far, the only `zeromq.rb` script that has been tested to work is as follows:
 ```
 class Zeromq < Formula
   desc "High-performance, asynchronous messaging library"
@@ -75,4 +75,4 @@ class Zeromq < Formula
 end
 ```
 
-NOTE: if you do change the zeromq.rb script, you will get errors like (this)[https://github.com/Homebrew/brew/issues/10286]. All you have to do is reset the forumulae by running this command: `brew update-reset $(brew --repo homebrew/core)`.
+NOTE: if you do change the zeromq.rb script, you will get errors like [this](https://github.com/Homebrew/brew/issues/10286). All you have to do is reset the forumulae by running this command: `brew update-reset $(brew --repo homebrew/core)`.
