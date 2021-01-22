@@ -50,8 +50,12 @@ long lastRPMTime = 0;
 long dTRPM = 1;
 long lastTorqueTime = 0;
 long dTTorque = 1;
-float momentOfIntertia = 0.1129; // need to actually calculate this
+float momentOfIntertia = 0.1129; // kinda sus, probably need to recalculate this
 float torque = 0;
+// simulate acceleration
+float targetRPM = 0;
+float targetDT = 1; // ms
+float acc = 5; // rad/s^2
 
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);
@@ -69,9 +73,11 @@ NonBlockingTask pSenseUpdate(10);
 // Track MPP every 50 milliseconds.
 NonBlockingTask mpptUpdate(50);
 // Find RPM every 10 ms
-NonBlockingTask rpmUpdate(50);
-// Find torque every 10 ms
-NonBlockingTask torqueUpdate(50);
+NonBlockingTask rpmUpdate(1);
+// Find torque every 5 ms
+NonBlockingTask torqueUpdate(5);
+// Update RPM every 1 ms (if simulation mode is set for simulating acceleration)
+NonBlockingTask accelerateRPM(targetDT);
 
 // Moving average uses last avgCount samples.
 RunningAverage movAvgCurrent(avgCount);
@@ -196,4 +202,10 @@ void trackTorque() {
   }
   lastRPM = rpm;
   lastTorqueTime = micros();
+}
+
+// simulate acceleration
+void accelerate() { 
+  targetRPM+=(acc*targetDT/1000.0)*(30.0/M_PI);
+  dTRPM = 60000000.0/targetRPM;
 }

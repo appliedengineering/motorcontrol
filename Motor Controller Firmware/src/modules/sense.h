@@ -55,6 +55,10 @@ extern long dTTorque; // difference in time between two rpm readings
 extern float momentOfIntertia; // kg*m^2
 extern float torque;
 
+extern float targetRPM;
+extern float targetDT; // ms
+extern float acc; // rad/s^2
+
 extern OneWire oneWire;
 extern DallasTemperature tempSensors;
 
@@ -65,6 +69,7 @@ extern NonBlockingTask pSenseUpdate;
 extern NonBlockingTask mpptUpdate;
 extern NonBlockingTask rpmUpdate;
 extern NonBlockingTask torqueUpdate;
+extern NonBlockingTask accelerateRPM;
 
 extern RunningAverage movAvgCurrent;
 
@@ -77,3 +82,4 @@ void senseVoltage();
 void sensePower();
 void trackMPP();
 void trackTorque();
+void accelerate();

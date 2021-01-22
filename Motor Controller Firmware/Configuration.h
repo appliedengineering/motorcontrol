@@ -42,6 +42,9 @@
  *  
  */
 #define TESTING_MODE 3
+#if TESTING_MODE==3 
+  #define SIMULATION_MODE 1 // 2 simulates acceleration, 1 for reading actual signals to pin 2
+#endif
 
 //===========================================================================
 //============================= Power Options ===============================
