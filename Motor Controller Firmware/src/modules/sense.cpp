@@ -52,6 +52,7 @@ long lastTorqueTime = 0;
 long dTTorque = 1;
 float momentOfIntertia = 0.1129; // kinda sus, probably need to recalculate this
 float torque = 0;
+long numInterrupts = 0;
 // simulate acceleration
 float targetRPM = 0;
 float targetDT = 1; // ms
