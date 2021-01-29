@@ -30,8 +30,17 @@ void configureSerial() {
 
 void sendData() {
   #if TESTING_MODE==3 
+    boatData["micros"] = micros();
+    boatData["high/low"] = digitalRead(2);
+    boatData["numInterrupts"] = numInterrupts;
     boatData["rpm"] = rpm;
+    boatData["lastRPMTime"] = lastRPMTime;
+    boatData["dTRPM"] = dTRPM;
     boatData["torque"] = torque;
+    boatData["dR"] = dR;
+    boatData["lastRPM"] = lastRPM;
+    boatData["dTTorque"] = dTTorque;
+    boatData["lastTorqueTime"] = lastTorqueTime;
   #elif TESTING_MODE==2
     boatData["throttleDuty"] = throttleDuty;
     boatData["mpptDuty"] = mpptDuty;
