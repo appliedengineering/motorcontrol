@@ -23,6 +23,7 @@ void isr() {
   detachInterrupt(digitalPinToInterrupt(2));
   dTRPM = micros()-lastRPMTime;
   lastRPMTime = micros();
+  numInterrupts++;
   attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
 }
 
