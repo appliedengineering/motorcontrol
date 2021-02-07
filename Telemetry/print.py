@@ -8,6 +8,7 @@ import queue
 import serial
 import serial.tools.list_ports
 import threading
+import sys
 
 # Set logging verbosity.
 # CRITICAL will not log anything.
@@ -17,6 +18,9 @@ log_level = logging.INFO
 
 # Define message end sequence.
 end = b'EOM\n'
+
+# Open / Create log file
+sys.stdout = open('log.txt', 'w')
 
 def findArduinoPort():
     '''Locate Arduino serial port.'''
@@ -48,11 +52,13 @@ def readFromArduino(queue, exit_event):
     logging.info('Producer received event. Exiting now.')
     link.close()
 
-def printToConsole(queue, exit_event):
-    '''Print data to console.'''
+def outputData(queue, exit_event):
+    '''Print data to console or txt file.'''
     while not exit_event.is_set() or not queue.empty():
         try:
-            print(msgpack.unpackb(queue.get(), use_list=False, raw=False))
+            data = msgpack.unpackb(queue.get(), use_list=False, raw=False) 
+            print(data)
+            logging.info(data)
             logging.info('Consumer printed data. Queue size is %d.', queue.qsize())
 
         except Exception as e:
@@ -74,7 +80,7 @@ if __name__ == '__main__':
         exit_event = threading.Event()
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             executor.submit(readFromArduino, pipeline, exit_event)
-            executor.submit(printToConsole, pipeline, exit_event)
+            executor.submit(outputData, pipeline, exit_event)
     
     except KeyboardInterrupt:
         logging.info('Setting exit event.')
