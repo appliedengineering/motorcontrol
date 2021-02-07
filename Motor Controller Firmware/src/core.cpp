@@ -55,7 +55,7 @@ void loop() {
   } else if (duty > 100) {
     duty = 100;
   }
-  
+
   // Set PWM output and store value before duty is updated.
   if (duty != lastDuty) {
     setPWM();
@@ -65,6 +65,11 @@ void loop() {
   // Read throttle input without blocking.
   if (nonblockingUpdate(inputUpdate)) {
     readInput();
+    #if TESTING_MODE==3
+      #if defined(TELEMETRY)
+        sendData();
+      #endif
+    #endif
   }
 
   // Update duty without blocking.
@@ -73,52 +78,45 @@ void loop() {
     checkProtections();
   }
 
-  // Read temperatures without blocking.
-  if (nonblockingUpdate(tempUpdate)) {
-    senseTemperatures();
-  }
-
-  // Read current without blocking.
-  if (nonblockingUpdate(iSenseUpdate)) {
-    senseCurrent();
-  }
-
-  // Read voltage without blocking.
-  if (nonblockingUpdate(vSenseUpdate)) {
-    senseVoltage();
-  }
-
-  // Read power without blocking.
-  if (nonblockingUpdate(pSenseUpdate)) {
-    sensePower();
-  }
-
   // Track MPP without blocking.
   #if defined(MAX_POWER_POINT_TRACKING)
     if (nonblockingUpdate(mpptUpdate)) {
       trackMPP();
     }
+    // Read current without blocking.
+    if (nonblockingUpdate(iSenseUpdate)) {
+      senseCurrent();
+    }
+    // Read voltage without blocking.
+    if (nonblockingUpdate(vSenseUpdate)) {
+      senseVoltage();
+    }
+    // Read power without blocking.
+    if (nonblockingUpdate(pSenseUpdate)) {
+      sensePower();
+    }
   #endif
-
-  // Track rpm without blocking.
-  #if TESTING_MODE==3
+  
+  #if TESTING_MODE!=3
+    // Read temperatures without blocking.
+    if (nonblockingUpdate(tempUpdate)) {
+      senseTemperatures();
+    }
+    // Send telemetry without blocking.
+    #if defined(TELEMETRY)
+      if (nonblockingUpdate(telemetryUpdate)) {
+        sendData();
+      }
+    #endif
+  #else // track RPM
     #if SIMULATION_MODE==2 
       if (nonblockingUpdate(accelerateRPM)) {
         accelerate();
       }
     #endif
     if (nonblockingUpdate(rpmUpdate)) {
-      rpm = 60000000.0/dTRPM;
-    }
-    if (nonblockingUpdate(torqueUpdate)) {
+      if (numInterrupts>1) rpm = 60000000.0/dTRPM;
       trackTorque();
-    }
-  #endif
-
-  // Send telemetry without blocking.
-  #if defined(TELEMETRY)
-    if (nonblockingUpdate(telemetryUpdate)) {
-      sendData();
     }
   #endif
 }

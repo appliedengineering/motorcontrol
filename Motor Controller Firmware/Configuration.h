@@ -37,7 +37,7 @@
  * Tells us what kind of testing we are doing
  * 
  *   1 : no testing
- *   2 : mppt simulation
+ *   2 : mppt simulation (watches how mppt behaves for simulated values of current and voltage)
  *   3 : tachometer testing
  *  
  */
@@ -59,7 +59,7 @@
  * -- Power supply voltage must NOT exceed 40V! --
  * 
  */
-#define POWER_SUPPLY 2
+#define POWER_SUPPLY 1
 
 //===========================================================================
 //============================= Input Options ===============================

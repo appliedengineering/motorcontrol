@@ -50,9 +50,10 @@ long lastRPMTime = 0;
 long dTRPM = 1;
 long lastTorqueTime = 0;
 long dTTorque = 1;
-float momentOfIntertia = 0.1129; // kinda sus, probably need to recalculate this
+float momentOfIntertia = 0.1129; 
 float torque = 0;
 long numInterrupts = 0;
+long lastNumInterrupts = 0;
 // simulate acceleration
 float targetRPM = 0;
 float targetDT = 1; // ms
@@ -63,22 +64,25 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass oneWire reference to DallasTemperature library
 DallasTemperature tempSensors(&oneWire);
 
-// Sense temperatures after conversions complete.
-NonBlockingTask tempUpdate(conversionTime);
-// Sense current every 10 milliseconds.
-NonBlockingTask iSenseUpdate(10);
-// Sense voltage every 10 milliseconds.
-NonBlockingTask vSenseUpdate(10);
-// Sense power every 10 milliseconds.
-NonBlockingTask pSenseUpdate(10);
-// Track MPP every 50 milliseconds.
-NonBlockingTask mpptUpdate(50);
-// Find RPM every 10 ms
-NonBlockingTask rpmUpdate(1);
-// Find torque every 5 ms
-NonBlockingTask torqueUpdate(5);
-// Update RPM every 1 ms (if simulation mode is set for simulating acceleration)
-NonBlockingTask accelerateRPM(targetDT);
+#if defined(MAX_POWER_POINT_TRACKING)
+  // Track MPP every 50 milliseconds.
+  NonBlockingTask mpptUpdate(50);
+  // Sense current every 10 milliseconds.
+  NonBlockingTask iSenseUpdate(10);
+  // Sense voltage every 10 milliseconds.
+  NonBlockingTask vSenseUpdate(10);
+  // Sense power every 10 milliseconds.
+  NonBlockingTask pSenseUpdate(10);
+#endif
+#if TESTING_MODE!=3
+  // Sense temperatures after conversions complete.
+  NonBlockingTask tempUpdate(conversionTime);
+#else
+  NonBlockingTask rpmUpdate(5);
+  #if SIMULATION_MODE==2
+    NonBlockingTask accelerateRPM(targetDT);
+  #endif
+#endif
 
 // Moving average uses last avgCount samples.
 RunningAverage movAvgCurrent(avgCount);
@@ -197,12 +201,13 @@ void trackTorque() {
   dTTorque = micros()-lastTorqueTime;
   dR = rpm - lastRPM;
   if (dTTorque!=0) {
-    torque = momentOfIntertia * (dR * M_PI/30.0)/(dTTorque/1000000.0);
+    if (lastNumInterrupts!=numInterrupts && numInterrupts!=1) torque = momentOfIntertia * (dR * M_PI/30.0)/(dTTorque/1000000.0);
   } else {
     torque = 0;
   }
   lastRPM = rpm;
   lastTorqueTime = micros();
+  lastNumInterrupts = numInterrupts;
 }
 
 // simulate acceleration

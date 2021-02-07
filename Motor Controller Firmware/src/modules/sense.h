@@ -55,6 +55,7 @@ extern long dTTorque; // difference in time between two rpm readings
 extern float momentOfIntertia; // kg*m^2
 extern float torque;
 extern long numInterrupts;
+extern long lastNumInterrupts;
 
 extern float targetRPM;
 extern float targetDT; // ms
