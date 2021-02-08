@@ -64,6 +64,7 @@ for line in log_file_lines:
     i = 0
     for key in j_keys:
         output(str(j[key]) + (',' if i + 1 < key_len else ''))
+        i += 1
     output_newline()
     line_count += 1
 
