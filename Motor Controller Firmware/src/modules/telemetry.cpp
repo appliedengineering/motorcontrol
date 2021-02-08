@@ -31,8 +31,9 @@ void configureSerial() {
 }
 
 void sendData() {
+  boatData["time(ms)"] = millis();
   #if TESTING_MODE==3 
-    boatData["high/low"] = digitalRead(2);
+    boatData["lastRPMTime"] = lastRPMTime;
     boatData["numInterrupts"] = numInterrupts;
     boatData["rpm"] = rpm;
     boatData["torque"] = torque;

@@ -20,11 +20,11 @@
 
 // isr for tachometer (Interrupt Service Routine)
 void isr() {
-  detachInterrupt(digitalPinToInterrupt(2));
+  // detachInterrupt(digitalPinToInterrupt(2));
   dTRPM = micros()-lastRPMTime;
   lastRPMTime = micros();
   numInterrupts++;
-  attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
+  // attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
 }
 
 /******************** BEGIN Setup ****************************/
@@ -67,8 +67,12 @@ void loop() {
     readInput();
     #if TESTING_MODE==3
       #if defined(TELEMETRY)
-        sendData();
+        telemetryCounter++;
+        if (telemetryCounter%telemetryUpdateMultiplier==0) sendData();
       #endif
+      senseCurrent();
+      senseVoltage();
+      sensePower();
     #endif
   }
 
