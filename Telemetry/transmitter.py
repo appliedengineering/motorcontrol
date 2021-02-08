@@ -1,4 +1,4 @@
-# Telemetry ZeroMQ Publisher
+# Telemetry ZeroMQ Transmitter
 # Copyright (c) 2020 Applied Engineering
 
 import concurrent.futures
@@ -23,6 +23,9 @@ context = zmq.Context.instance()
 # Define the socket using the Context.
 radio = context.socket(zmq.RADIO)
 radio.connect('udp://224.0.0.1:28650')
+
+pub = context.socket(zmq.PUB)
+pub.bind("tcp://*:2000")
 
 # Define message end sequence.
 end = b'EOM\n'
@@ -68,7 +71,9 @@ def sendZmqMulticast(queue, exit_event):
         try:
             # queue.get(True, 2) blocks with a 2 second timeout
             # If still empty after 2 seconds, throws Queue.Empty
-            radio.send(queue.get(True, 2), group='telemetry')
+            data = queue.get(True, 2)
+            radio.send(data, group='telemetry')
+            pub.send(data)
             logging.info('Consumer sending data. Queue size is %d.', queue.qsize())
         except Queue.Empty:
             pass    # no message ready yet

@@ -1,4 +1,4 @@
-# Telemetry ZeroMQ Subscriber
+# Telemetry ZeroMQ Dish
 # Copyright (c) 2020 Applied Engineering
 
 import logging
