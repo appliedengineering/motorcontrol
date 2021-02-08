@@ -1,5 +1,5 @@
 # Telemetry ZeroMQ Subscriber
-# Copyright (c) 2020 Applied Engineering
+# Copyright (c) 2021 Applied Engineering
 
 import logging
 import msgpack
