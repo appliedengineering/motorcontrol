@@ -54,7 +54,7 @@ float momentOfIntertia = 0.1129;
 float torque = 0;
 long numInterrupts = -1;
 long lastNumInterrupts = 0;
-int telemetryUpdateMultiplier = 50; //how many times slower to update telemetry than input
+int telemetryUpdateMultiplier = 10; //how many times slower to update telemetry than input
 long telemetryCounter = 0;
 // simulate acceleration
 float targetRPM = 0;
