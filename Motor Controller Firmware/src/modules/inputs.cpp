@@ -61,6 +61,8 @@ void readInput() {
         targetDuty = 0;
       }
     }
+  #elif defined(CONSTANT_DUTY)
+    targetDuty = CONSTANT_DUTY;  
   #endif
   if (targetDuty != lastTargetDuty) {
     targetReached = false;
