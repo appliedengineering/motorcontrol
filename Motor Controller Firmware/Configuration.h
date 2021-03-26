@@ -71,12 +71,13 @@
  *   1 : 1 - 4V throttle
  *   2 : momentary push-button switch
  *   3 : self-test (loops target duty between 100% and 0% for ramp times)
- *   4 : constant rpm
+ *   4 : constant rpm, with controllable ramp up
+ *   5 : constant rpm, no controllable ramp up
  * 
  */
-#define INPUT_DEVICE 4
-#if INPUT_DEVICE == 4
-  #define CONSTANT_DUTY 10
+#define INPUT_DEVICE 5
+#if INPUT_DEVICE >= 4
+  #define CONSTANT_DUTY 60
 #endif
 
 //===========================================================================
