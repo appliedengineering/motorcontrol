@@ -123,7 +123,8 @@ void updateDuty() {
   }
   // Decision between throttle and mppt
   if (POWER_SUPPLY == 1) { // on batteries -- no need for mppt
-    duty = throttleDuty;
+    if (INPUT_DEVICE==5) duty = CONSTANT_DUTY;
+    else duty = throttleDuty;
   } else {
     if (targetDuty>=border) {
       if (throttleDuty<border) { // ramp up
