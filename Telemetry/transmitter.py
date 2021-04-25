@@ -32,7 +32,7 @@ end = b'EOM\n'
 
 def addTimestampToStruct(data):
     buffer = msgpack.unpackb(data)
-    buffer["timeStamp"] = time.time()
+    buffer["timeStamp"] = round(time.time(), 3)
     # NOTE: timeStamp is a 64 bit Float or Double NOT a 32 bit float as is the case with the other data
     return msgpack.packb(buffer)
 
