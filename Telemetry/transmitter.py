@@ -30,12 +30,9 @@ pub.bind("tcp://*:2000")
 # Define message end sequence.
 end = b'EOM\n'
 
-startTimestamp = time.time()
-
 def addTimestampToStruct(data):
     buffer = msgpack.unpackb(data)
-    buffer["timeStamp"] = time.time()-startTimestamp
-    #print(buffer)
+    buffer["timeStamp"] = round(time.time(), 3)
     # NOTE: timeStamp is a 64 bit Float or Double NOT a 32 bit float as is the case with the other data
     return msgpack.packb(buffer)
 
