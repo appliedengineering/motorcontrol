@@ -44,7 +44,11 @@ void readInput() {
     }
 
     // Integer math for (ADC - 205) * (100/615).
-    targetDuty = (rawDuty - 205) * 333 / 2048;
+    // targetDuty = (rawDuty - 205) * 333 / 2048
+    // The below makes foot pedal work
+    if (rawDuty==820) targetDuty = 100;
+    else if (rawDuty==205) targetDuty = 0;
+
   #elif defined(BUTTON)
     if (digitalReadFast(BUTTON) == HIGH) {
       // Treat unpressed button (HIGH) as 0% throttle.

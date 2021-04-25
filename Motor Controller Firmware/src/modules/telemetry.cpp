@@ -22,7 +22,7 @@ StaticJsonDocument<128> boatData;
 
 #if TESTING_MODE!=3
   // Send telemetry at 10 Hz.
-  NonBlockingTask telemetryUpdate(10);
+  NonBlockingTask telemetryUpdate(50);
 #endif
 
 void configureSerial() {
@@ -31,13 +31,12 @@ void configureSerial() {
 }
 
 void sendData() {
-  boatData["time(ms)"] = millis();
   #if TESTING_MODE==3 
     boatData["lastRPMTime"] = lastRPMTime;
     boatData["numInterrupts"] = numInterrupts;
     boatData["rpm"] = rpm;
     boatData["torque"] = torque;
-  #elif TESTING_MODE==2
+  #elif POWER_SUPPLY==2
     boatData["throttleDuty"] = throttleDuty;
     boatData["mpptDuty"] = mpptDuty;
   #endif

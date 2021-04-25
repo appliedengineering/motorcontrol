@@ -41,7 +41,7 @@
  *   3 : tachometer testing
  *  
  */
-#define TESTING_MODE 3
+#define TESTING_MODE 1
 #if TESTING_MODE==3 
   #define SIMULATION_MODE 1 // 2 simulates acceleration, 1 for reading actual signals to pin 2
 #endif
@@ -74,7 +74,7 @@
  *   4 : constant rpm
  * 
  */
-#define INPUT_DEVICE 4
+#define INPUT_DEVICE 1
 #if INPUT_DEVICE == 4
   #define CONSTANT_DUTY 10
 #endif
