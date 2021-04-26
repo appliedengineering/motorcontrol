@@ -76,8 +76,8 @@
  * 
  */
 #define INPUT_DEVICE 1
-#if INPUT_DEVICE = 4
-  #define CONSTANT_DUTY 10
+#if INPUT_DEVICE >= 4
+  #define CONSTANT_DUTY 60
 #endif
 
 //===========================================================================
