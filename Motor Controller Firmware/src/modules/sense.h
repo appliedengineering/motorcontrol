@@ -85,5 +85,6 @@ void senseCurrent();
 void senseVoltage();
 void sensePower();
 void trackMPP();
+void trackVPP();
 void trackTorque();
 void accelerate();

@@ -66,16 +66,17 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass oneWire reference to DallasTemperature library
 DallasTemperature tempSensors(&oneWire);
 
-#if defined(MAX_POWER_POINT_TRACKING)
-  // Track MPP every 50 milliseconds.
-  NonBlockingTask mpptUpdate(50);
+#if (POWER_SUPPLY==2)
   // Sense current every 10 milliseconds.
   NonBlockingTask iSenseUpdate(10);
   // Sense voltage every 10 milliseconds.
   NonBlockingTask vSenseUpdate(10);
   // Sense power every 10 milliseconds.
   NonBlockingTask pSenseUpdate(10);
+  // Track MPP every 50 milliseconds.
+  NonBlockingTask mpptUpdate(50);
 #endif
+
 #if TESTING_MODE!=3
   // Sense temperatures after conversions complete.
   NonBlockingTask tempUpdate(conversionTime);
@@ -197,6 +198,14 @@ void trackMPP() {
   }
   lastPower = power;
   lastMPPTduty = mpptDuty;
+}
+
+void trackVPP() {
+  #if defined(V_MPP)
+    int vTarget = V_MPP;
+    if (voltage<vTarget) duty--;
+    else if (voltage>vTarget) duty++; 
+  #endif
 }
 
 void trackTorque() {

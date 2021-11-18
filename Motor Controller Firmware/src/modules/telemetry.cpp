@@ -57,3 +57,14 @@ void sendData() {
   // Send message end sequence.
   Serial.print("EOM\n");
 }
+
+// Simple terminal printing
+void sendData2() {
+  Serial.print("\tdutyPercent: ");
+  Serial.print(duty);
+  Serial.print("\tsourceVoltage: ");
+  Serial.print(voltage);
+  Serial.print("\tpwmCurrent: ");
+  Serial.print(current);
+  Serial.println();
+}

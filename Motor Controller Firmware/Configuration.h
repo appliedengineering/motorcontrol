@@ -29,6 +29,16 @@
 
 // Enable telemetry at the specified serial communication speed.
 #define TELEMETRY 500000
+#if defined(TELEMETRY)
+  /**
+   * Available telemetry options:
+   * 
+   *   1 : Uses the original boat telemetry; requires an Atomic Pi to run
+   *   2 : Just prints desired values to the PlatformIO Serial Monitor (for when mode 1 doesn't work)
+   * 
+   */
+  #define TELEMETRY_MODE 2
+#endif
 
 //===========================================================================
 //============================ Testing Options ==============================
@@ -41,7 +51,7 @@
  *   3 : tachometer testing
  *  
  */
-#define TESTING_MODE 1
+#define TESTING_MODE 2
 #if TESTING_MODE==3 
   #define SIMULATION_MODE 1 // 2 simulates acceleration, 1 for reading actual signals to pin 2
 #endif
@@ -59,7 +69,23 @@
  * -- Power supply voltage must NOT exceed 40V! --
  * 
  */
-#define POWER_SUPPLY 1
+#define POWER_SUPPLY 2
+
+// Enable these features when running on solar.
+/**
+ * Available solar modes:
+ *    1 : MPPT -- extremely slow when there are bad current readings (as there are now)
+ *    2 : VPPT -- Attempts to approximate MPPT by chasing a user-defined V_mpp (voltage of max power point)
+*/
+#if POWER_SUPPLY == 2
+  #define OVERVOLTAGE_PREVENTION
+  #define SOLAR_MODE 2
+  #if SOLAR_MODE == 1 
+    #define MAX_POWER_POINT_TRACKING;
+  #elif SOLAR_MODE ==2
+    #define V_MPP 24;
+  #endif
+#endif
 
 //===========================================================================
 //============================= Input Options ===============================
@@ -110,9 +136,3 @@
 
 // Limit the current through the board to 30A.
 #define OVERCURRENT_PROTECTION
-
-// Enable these features when running on solar.
-#if POWER_SUPPLY == 2
-  #define OVERVOLTAGE_PREVENTION
-  #define MAX_POWER_POINT_TRACKING
-#endif

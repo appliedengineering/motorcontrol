@@ -83,9 +83,14 @@ void loop() {
   }
 
   // Track MPP without blocking.
-  #if defined(MAX_POWER_POINT_TRACKING)
+  #if POWER_SUPPLY==2
     if (nonblockingUpdate(mpptUpdate)) {
-      trackMPP();
+      #if defined MAXIMUM_POWER_POINT_TRACKING
+        trackMPP();
+      #elif defined V_MPP
+        trackVPP();
+        Serial.println(voltage);
+      #endif
     }
     // Read current without blocking.
     if (nonblockingUpdate(iSenseUpdate)) {
@@ -109,7 +114,11 @@ void loop() {
     // Send telemetry without blocking.
     #if defined(TELEMETRY)
       if (nonblockingUpdate(telemetryUpdate)) {
-        sendData();
+        #if TELEMETRY_MODE==1
+          sendData();
+        #elif TELEMETRY_MODE==2
+          sendData2();
+        #endif
       }
     #endif
   #else // track RPM

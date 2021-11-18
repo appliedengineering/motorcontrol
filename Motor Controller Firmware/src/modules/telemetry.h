@@ -28,3 +28,4 @@ extern NonBlockingTask telemetryUpdate;
 
 void configureSerial();
 void sendData();
+void sendData2();

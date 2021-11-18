@@ -123,23 +123,29 @@ void updateDuty() {
   }
   // Decision between throttle and mppt
   if (POWER_SUPPLY == 1) { // on batteries -- no need for mppt
-    if (INPUT_DEVICE==5) duty = CONSTANT_DUTY;
-    else duty = throttleDuty;
-  } else {
-    if (targetDuty>=border) {
-      if (throttleDuty<border) { // ramp up
-        duty = throttleDuty;
-      } else { 
-        // mppt
-      }
-    } else {
-      if (throttleDuty<border) { // ramp down
-        duty = throttleDuty;
-      } else { // wait for mppt to reach border
-        if (throttleDuty-border<2 && abs(border-duty)>=2) {
-          throttleDuty++; // delay going down until duty ramps up/down to nearer the border
+    #if defined(CONSTANT_DUTY)
+      if (INTPUT_DEVICE==4 && duty<CONSTANT_DUTY) duty+=1; // ramp up
+      else duty = CONSTANT_DUTY;
+    #else duty = throttleDuty;
+    #endif
+  } 
+  else {
+    #if defined(MAXIMUM_POWER_POINT_TRACKING)
+      if (targetDuty>=border) {
+        if (throttleDuty<border) { // ramp up
+          duty = throttleDuty;
+        } else { 
+          // mppt (duty is being changed in sense.cpp)
+        }
+      } else {
+        if (throttleDuty<border) { // ramp down
+          duty = throttleDuty;
+        } else { // wait for mppt to reach border
+          if (throttleDuty-border<2 && abs(border-duty)>=2) {
+            throttleDuty++; // delay going down until duty ramps up/down to nearer the border
+          }
         }
       }
-    }
+    #endif
   }
 }
