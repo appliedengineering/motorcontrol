@@ -37,7 +37,7 @@
    *   2 : Just prints desired values to the PlatformIO Serial Monitor (for when mode 1 doesn't work)
    * 
    */
-  #define TELEMETRY_MODE 2
+  #define TELEMETRY_MODE 1
 #endif
 
 //===========================================================================
