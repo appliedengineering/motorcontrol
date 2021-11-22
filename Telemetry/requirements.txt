@@ -1,7 +1,0 @@
-msgpack
-pyserial
-PyYAML
-# You may receive errors because pyzmq doesn't support draft sockets by default.
-# Install pyzmq using the following command:
-#   pip install -v --pre pyzmq --install-option=--enable-drafts
-# pyzmq
