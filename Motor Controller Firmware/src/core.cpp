@@ -89,7 +89,6 @@ void loop() {
         trackMPP();
       #elif defined V_MPP
         trackVPP();
-        Serial.println(voltage);
       #endif
     }
     // Read current without blocking.
