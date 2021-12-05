@@ -91,6 +91,8 @@ void loop() {
         trackVPP();
       #endif
     }
+  #endif
+  
     // Read current without blocking.
     if (nonblockingUpdate(iSenseUpdate)) {
       senseCurrent();
@@ -103,8 +105,7 @@ void loop() {
     if (nonblockingUpdate(pSenseUpdate)) {
       sensePower();
     }
-  #endif
-  
+
   #if TESTING_MODE!=3
     // Read temperatures without blocking.
     if (nonblockingUpdate(tempUpdate)) {

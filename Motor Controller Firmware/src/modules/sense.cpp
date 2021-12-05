@@ -67,15 +67,16 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature tempSensors(&oneWire);
 
 #if (POWER_SUPPLY==2)
-  // Sense current every 10 milliseconds.
+  // Track MPP every 50 milliseconds.
+  NonBlockingTask mpptUpdate(50);
+#endif
+
+// Sense current every 10 milliseconds.
   NonBlockingTask iSenseUpdate(10);
   // Sense voltage every 10 milliseconds.
   NonBlockingTask vSenseUpdate(10);
   // Sense power every 10 milliseconds.
   NonBlockingTask pSenseUpdate(10);
-  // Track MPP every 50 milliseconds.
-  NonBlockingTask mpptUpdate(50);
-#endif
 
 #if TESTING_MODE!=3
   // Sense temperatures after conversions complete.
@@ -146,7 +147,7 @@ void senseVoltage() {
   vSenseADC /= 5;
   #if TESTING_MODE==2 
     voltage = 13.0 * log(10 - current);
-  #else 
+  #else
     voltage = vSenseADC * (44.8 / 1024);
   #endif
 }

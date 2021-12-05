@@ -62,6 +62,10 @@ void sendData() {
 void sendData2() {
   Serial.print("\tdutyPercent: ");
   Serial.print(duty);
+  Serial.print("\tthrottleDuty: ");
+  Serial.print(throttleDuty);
+  Serial.print("\ttargetDuty: ");
+  Serial.print(targetDuty);
   Serial.print("\tsourceVoltage: ");
   Serial.print(voltage);
   Serial.print("\tpwmCurrent: ");

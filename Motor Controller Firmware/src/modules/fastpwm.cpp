@@ -126,7 +126,8 @@ void updateDuty() {
     #if defined(CONSTANT_DUTY)
       if (INTPUT_DEVICE==4 && duty<CONSTANT_DUTY) duty+=1; // ramp up
       else duty = CONSTANT_DUTY;
-    #else duty = throttleDuty;
+    #else 
+      duty = throttleDuty;
     #endif
   } 
   else {

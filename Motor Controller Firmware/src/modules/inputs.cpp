@@ -39,15 +39,17 @@ void readInput() {
     // 1 V (205) is 0% and 4 V (820) is 100%.
     if (rawDuty < 205) {
       rawDuty = 205;
+      targetDuty = 0;
     } else if (rawDuty > 820) {
       rawDuty = 820;
+      targetDuty = 100;
+    } else { // rawDuty btw 205 and 820 
+      // Serial.println(rawDuty);
+      targetDuty = (int)(100*(rawDuty - 205.0)/(820.0-205.0));
     }
 
     // Integer math for (ADC - 205) * (100/615).
     // targetDuty = (rawDuty - 205) * 333 / 2048
-    // The below makes foot pedal work
-    if (rawDuty==820) targetDuty = 100;
-    else if (rawDuty==205) targetDuty = 0;
 
   #elif defined(BUTTON)
     if (digitalReadFast(BUTTON) == HIGH) {

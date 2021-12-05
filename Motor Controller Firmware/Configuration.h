@@ -51,7 +51,7 @@
  *   3 : tachometer testing
  *  
  */
-#define TESTING_MODE 2
+#define TESTING_MODE 1
 #if TESTING_MODE==3 
   #define SIMULATION_MODE 1 // 2 simulates acceleration, 1 for reading actual signals to pin 2
 #endif
@@ -69,7 +69,7 @@
  * -- Power supply voltage must NOT exceed 40V! --
  * 
  */
-#define POWER_SUPPLY 2
+#define POWER_SUPPLY 1
 
 // Enable these features when running on solar.
 /**
