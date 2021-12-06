@@ -144,6 +144,7 @@ void senseVoltage() {
   for (senseSamples = 0; senseSamples < 5; senseSamples++) {
     vSenseADC += analogReadFast(VBAT);
   }
+  // Serial.println(vSenseADC);
   vSenseADC /= 5;
   #if TESTING_MODE==2 
     voltage = 13.0 * log(10 - current);
